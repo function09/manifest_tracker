@@ -11,7 +11,7 @@ const manifestSchema = new Schema({
   UUID: { type: String, required: true },
 });
 
-manifestSchema.virtual("UUID").get(function () {
+manifestSchema.virtual("id").get(function () {
   return `/${this.UUID}`;
 });
 
