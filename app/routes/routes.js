@@ -1,8 +1,13 @@
 import Router from "express";
+import convertPDFtoText from "../services/pdfParse.js";
+import createMaterialAndBatchID from "../services/pdfParse.js";
+
+const source = "app/services/test.pdf";
 
 const router = Router();
 
 router.get("/", (req, res, next) => {
+  createMaterialAndBatchID(source);
   res.send("GET route to display all manifests");
 });
 
