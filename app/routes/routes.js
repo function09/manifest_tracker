@@ -1,5 +1,5 @@
 import Router from "express";
-import { createMaterialAndBatchID, extractProductDescription, extractQuantity } from "../services/pdfParse.js";
+import { createMaterialAndBatchID, extractProductDescription, extractQuantity, createItem } from "../services/pdfParse.js";
 
 const source1 = "app/services/test2.pdf";
 const source2 = "app/services/test.pdf";
@@ -7,7 +7,7 @@ const source2 = "app/services/test.pdf";
 const router = Router();
 
 router.get("/", (req, res, next) => {
-  extractQuantity(source2);
+  createItem(createMaterialAndBatchID, extractProductDescription, extractQuantity, source1);
   res.send("GET route to display all manifests");
 });
 
