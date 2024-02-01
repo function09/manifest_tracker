@@ -1,4 +1,3 @@
-import fs from "fs";
 import pdf from "pdf-parse";
 
 const extractManifestDetails = async (buffer) => {
