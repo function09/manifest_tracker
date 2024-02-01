@@ -1,7 +1,26 @@
 import fs from "fs";
 import pdf from "pdf-parse";
 
-const createMaterialAndBatchID = async (buffer) => {
+const extractManifestDetails = async (buffer) => {
+  try {
+    /*
+    If the accession of the text property were after the pdf call, 
+    it would not resolve, the then fixes this
+    */
+    const data = await pdf(buffer).then((result) => result.text.replace(/\s/g, ""));
+    const manifestObject = {
+      sendingWarehouse: data.match(/Warehouse:(.*)Document/)[1],
+      documentNumber: data.match(/No.:(.*)Departure/)[1],
+      departureDate: data.match(/DepartureDate:(.*?)Time/)[1],
+      arrivalDate: data.match(/ArrivalDate:(.*?)Time/)[1],
+    };
+    return manifestObject;
+  } catch (error) {
+    console.log(error);
+  }
+};
+
+const extractMaterialAndBatchID = async (buffer) => {
   const materialAndBatchIDList = [];
 
   try {
@@ -9,7 +28,7 @@ const createMaterialAndBatchID = async (buffer) => {
     const numericalStringsList = data.text.match(/\d+/g);
     /*
     The material numbers are five digits and prefixed by the ref #,
-    the ref # eeds to be removed
+    the ref # needs to be removed
     */
 
     const refWithMaterialNumber = numericalStringsList.filter((string) => string.length === 7);
@@ -19,7 +38,7 @@ const createMaterialAndBatchID = async (buffer) => {
     materialNumbers.forEach((number, index) => {
       materialAndBatchIDList.push(`${number}_${batchNumbers[index]}`);
     });
-    console.log(materialAndBatchIDList);
+
     return materialAndBatchIDList;
   } catch (error) {
     console.log(error);
@@ -36,7 +55,7 @@ const extractProductDescription = async (buffer) => {
 
     const DUFLAndDUTR = data.text.match(/IN-DU[A-Z]+-[a-zA-Z]-[A-Z]+/g);
     const DryFlower = data.text.match(/IN-[a-zA-Z]+-[A-Z]+[-&A-Z]+(?=G10.000)/g);
-    console.log(DUFLAndDUTR || DryFlower);
+
     return DUFLAndDUTR || DryFlower;
   } catch (error) {
     console.log(error);
@@ -46,15 +65,40 @@ const extractProductDescription = async (buffer) => {
 const extractQuantity = async (buffer) => {
   try {
     const data = await pdf(buffer);
-    console.log(data.text.match(/Qty:\d+.\d/g));
+
     return data.text.match(/Qty:\d+.\d+/g);
   } catch (error) {
     console.log(error);
   }
 };
 
-const createItem = (materialAndBatch, productDescription, quantity, source) => {
-  console.log(materialAndBatch(source), productDescription(source), quantity(source));
+const createItems = async (buffer) => {
+  try {
+    const items = await extractMaterialAndBatchID(buffer);
+    const itemDescription = await extractProductDescription(buffer);
+    const itemQuantity = await extractQuantity(buffer);
+
+    const itemsObject = items.map((item, index) => ({
+      materialAndBatch: item,
+      description: itemDescription[index],
+      itemQuantity: itemQuantity[index],
+    }));
+
+    return itemsObject;
+  } catch (error) {
+    console.log(error);
+  }
 };
 
-export { createMaterialAndBatchID, extractProductDescription, extractQuantity, createItem };
+// Refactor this to use promise.all, all functions calls here are indepdent of each other
+const createManifestObject = async (buffer) => {
+  try {
+    const manifestData = { ...(await extractManifestDetails(buffer)), items: await createItems(buffer) };
+
+    return manifestData;
+  } catch (error) {
+    console.log(error);
+  }
+};
+
+export default createManifestObject;
