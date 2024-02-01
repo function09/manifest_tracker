@@ -1,5 +1,4 @@
 import Router from "express";
-import createManifestObject from "../services/pdfParse.js";
 
 const router = Router();
 
