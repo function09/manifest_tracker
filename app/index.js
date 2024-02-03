@@ -9,7 +9,7 @@ const app = express();
 app.use(express.json());
 app.use(morgan("dev"));
 
-app.use("/v1/manifests", router);
+app.use("api/v1/manifests", router);
 
 // MongoDB connection
 const { CONNECTION_STRING } = process.env;

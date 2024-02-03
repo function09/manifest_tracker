@@ -80,6 +80,7 @@ const createItems = async (buffer) => {
     const itemsObject = items.map((item, index) => ({
       materialAndBatch: item,
       description: itemDescription[index],
+      // ***FIX THE QUANTITY SO THAT QTY DOES NOT APPEAR, use a label in a table column to identify them or something
       itemQuantity: itemQuantity[index],
     }));
 
