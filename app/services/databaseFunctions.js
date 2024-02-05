@@ -18,11 +18,12 @@ const checkIfDocumentExists = async (file) => {
 
 const getDocument = async (file) => {
   const document = await createManifestObject(file);
-  return await Manifest.find({ document: document.documentNumber }).exec();
+  const findDocument = await Manifest.find({ document: document.documentNumber }).exec();
+  return findDocument;
 };
 
 const uploadToDB = async (file) => {
   await new Manifest({ ...(await createManifestObject(file)), UUID: uuidv4() }).save();
 };
 
-export { checkIfDocumentExists, getAllDocuments, uploadToDB };
+export { checkIfDocumentExists, getDocument, uploadToDB };
