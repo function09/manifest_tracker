@@ -1,4 +1,4 @@
-import { checkIfDocumentExists, getAllDocuments, uploadToDB } from "../services/databaseFunctions.js";
+import { checkIfDocumentExists, getDocument, uploadToDB } from "../services/databaseFunctions.js";
 /* 
 Before uploading, check if:
 a file was selected,  
@@ -31,7 +31,7 @@ const uploadFile = async (req, res) => {
           res.status(200).json({ Status: "200 OK", Result: "Document number already exists" });
         } else {
           await uploadToDB(req.file.buffer);
-          res.status(200).json({ Status: "200 OK", Result: await getAllDocuments(req.file.buffer) });
+          res.status(200).json({ Status: "200 OK", Result: await getDocument(req.file.buffer) });
         }
       } catch (error) {
         console.log(error);
