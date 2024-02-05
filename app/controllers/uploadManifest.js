@@ -5,7 +5,7 @@ a file was selected,
 document # already exists in db,
 if the file is a pdf file,
 
-CLEAN EVERYTHING UP
+CLEAN EVERYTHING UP!!!!
 */
 
 const verifyFileSignature = (file) => {
