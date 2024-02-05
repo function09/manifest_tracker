@@ -25,10 +25,13 @@
         formData.append("file", file);
 
         try {
-          const response = await fetch("http://localhost:3000/api/v1/manifests/upload", {
-            method: "POST",
-            body: formData,
-          });
+          const response = await fetch(
+            "https://manifest-trackerrefactor-production.up.railway.app/api/v1/manifests/upload",
+            {
+              method: "POST",
+              body: formData,
+            }
+          );
           const data = await response.json();
           console.log(data);
         } catch (error) {
