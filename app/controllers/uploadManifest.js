@@ -19,7 +19,7 @@ const verifyFileSignature = (file) => {
   return check;
 };
 
-// Respond with appropriate HTTP codes
+// Respond with appropriate HTTP codes AND CLEAN UP
 const uploadFile = async (req, res) => {
   switch (true) {
     case !req.file:
