@@ -1,4 +1,4 @@
-import pdf from "pdf-parse/lib/pdf-parse";
+import pdf from "pdf-parse";
 import { v4 as uuidv4 } from "uuid";
 
 const extractManifestDetails = async (buffer) => {
