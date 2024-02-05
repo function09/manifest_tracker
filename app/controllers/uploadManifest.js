@@ -31,7 +31,7 @@ const uploadFile = async (req, res) => {
           res.status(200).json({ Status: "200 OK", Message: "Document number already exists" });
         } else {
           await uploadToDB(req.file.buffer);
-          res.status(200).json({ Status: "200 OK", Result: getAllDocuments() });
+          res.status(200).json({ Status: "200 OK", Result: await getAllDocuments(req.file.buffer) });
         }
       } catch (error) {
         console.log(error);
