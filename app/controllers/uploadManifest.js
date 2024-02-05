@@ -23,12 +23,12 @@ const verifyFileSignature = (file) => {
 const uploadFile = async (req, res) => {
   switch (true) {
     case !req.file:
-      res.status(200).json({ Status: "200 OK", Message: "No file has been selected" });
+      res.status(200).json({ Status: "200 OK", Result: "No file has been selected" });
       break;
     case verifyFileSignature(req.file.buffer):
       try {
         if (await checkIfDocumentExists(req.file.buffer)) {
-          res.status(200).json({ Status: "200 OK", Message: "Document number already exists" });
+          res.status(200).json({ Status: "200 OK", Result: "Document number already exists" });
         } else {
           await uploadToDB(req.file.buffer);
           res.status(200).json({ Status: "200 OK", Result: await getAllDocuments(req.file.buffer) });
@@ -38,7 +38,7 @@ const uploadFile = async (req, res) => {
       }
       break;
     default:
-      res.status(200).json({ Status: "200 OK", Message: "Error processing file" });
+      res.status(200).json({ Status: "200 OK", Result: "Error processing file" });
   }
 };
 

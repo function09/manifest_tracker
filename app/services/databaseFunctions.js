@@ -16,10 +16,9 @@ const checkIfDocumentExists = async (file) => {
   return check;
 };
 
-const getAllDocuments = async (file) => {
+const getDocument = async (file) => {
   const document = await createManifestObject(file);
-
-  await Manifest.find({ document: document.documentNumber }).exec();
+  return await Manifest.find({ document: document.documentNumber }).exec();
 };
 
 const uploadToDB = async (file) => {
