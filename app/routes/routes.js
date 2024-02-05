@@ -1,14 +1,18 @@
 import Router from "express";
+import multer from "multer";
+import verifyFile from "../controllers/uploadManifest.js";
+import uploadFile from "../controllers/uploadManifest.js";
 
 const router = Router();
+
+const storage = multer.memoryStorage();
+const upload = multer({ storage });
 
 router.get("/", (req, res, next) => {
   res.send("GET route to display all manifests");
 });
 
-router.post("/upload", (req, res, next) => {
-  res.send("POST route to create a new manifest object");
-});
+router.post("/upload", upload.single("file"), uploadFile);
 
 router.put("/update/:id", (req, res, next) => {
   res.send("PUT route to update manifest info");
