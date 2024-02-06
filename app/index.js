@@ -3,13 +3,20 @@ import morgan from "morgan";
 import mongoose from "mongoose";
 import router from "./routes/routes.js";
 import "dotenv/config";
+import cors from "cors";
 
 const app = express();
 
+const corsOptions = {
+  origin: "*",
+  optionsSuccessStatus: 200,
+};
+
 app.use(express.json());
 app.use(morgan("dev"));
+app.use(cors(corsOptions));
 
-app.use("/v1/manifests", router);
+app.use("/api/v1/manifests", router);
 
 // MongoDB connection
 const { CONNECTION_STRING } = process.env;

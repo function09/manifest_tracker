@@ -1,5 +1,5 @@
-import fs from "fs";
 import pdf from "pdf-parse";
+import { v4 as uuidv4 } from "uuid";
 
 const extractManifestDetails = async (buffer) => {
   try {
@@ -81,6 +81,7 @@ const createItems = async (buffer) => {
     const itemsObject = items.map((item, index) => ({
       materialAndBatch: item,
       description: itemDescription[index],
+      // ***FIX THE QUANTITY SO THAT QTY DOES NOT APPEAR, use a label in a table column to identify them or something
       itemQuantity: itemQuantity[index],
     }));
 
@@ -93,8 +94,7 @@ const createItems = async (buffer) => {
 // Refactor this to use promise.all, all functions calls here are indepdent of each other
 const createManifestObject = async (buffer) => {
   try {
-    const manifestData = { ...(await extractManifestDetails(buffer)), items: await createItems(buffer) };
-
+    const manifestData = { ...(await extractManifestDetails(buffer)), items: await createItems(buffer), UUID: uuidv4() };
     return manifestData;
   } catch (error) {
     console.log(error);
