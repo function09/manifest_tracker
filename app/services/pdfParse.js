@@ -26,6 +26,7 @@ const extractMaterialAndBatchID = async (buffer) => {
   try {
     const data = await pdf(buffer);
     const numericalStringsList = data.text.match(/\d+/g);
+
     /*
     The material numbers are five digits and prefixed by the ref #,
     the ref # needs to be removed
@@ -48,6 +49,7 @@ const extractMaterialAndBatchID = async (buffer) => {
 const extractProductDescription = async (buffer) => {
   try {
     const data = await pdf(buffer);
+
     /* 
     From experience, RnD flower tends to either be DUTR, DUFL, or Dry, 
     these variables handle these 3 exceptions 
