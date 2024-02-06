@@ -45,7 +45,7 @@ const uploadFile = async (req, res) => {
           res.status(200).json({ Result: "Document number already exists" });
         } else {
           await saveManifest(req);
-          res.status(200).json({ Message: "200 OK", Result: await getDocument(req) });
+          res.status(200).json({ Message: "200 OK" });
         }
       } catch (error) {
         console.log(error);
