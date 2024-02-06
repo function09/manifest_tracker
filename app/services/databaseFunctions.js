@@ -2,7 +2,6 @@ import { v4 as uuidv4 } from "uuid";
 import Manifest from "../models/manifest.js";
 import createManifestObject from "./pdfParse.js";
 
-<<<<<<< HEAD
 // database queries and such go here see if you can organize this better
 
 const checkIfDocumentExists = async (req) => {
@@ -37,30 +36,3 @@ const saveManifest = async (req) => {
 };
 
 export { checkIfDocumentExists, getDocument, createManifestObject, saveManifest };
-=======
-// Clean all of this up
-
-const checkIfDocumentExists = async (file) => {
-  const document = await createManifestObject(file);
-  const entry = await Manifest.findOne({ documentNumber: document.documentNumber }).exec();
-  let check = false;
-
-  if (entry) {
-    check = true;
-  }
-  console.log(check);
-  return check;
-};
-
-const getDocument = async (file) => {
-  const document = await createManifestObject(file);
-  const findDocument = await Manifest.find({ document: document.documentNumber }).exec();
-  return findDocument;
-};
-
-const uploadToDB = async (file) => {
-  await new Manifest({ ...(await createManifestObject(file)), UUID: uuidv4() }).save();
-};
-
-export { checkIfDocumentExists, getDocument, uploadToDB };
->>>>>>> 99ac936a0e99740bdc951fe95240b68ee8d2d42a
