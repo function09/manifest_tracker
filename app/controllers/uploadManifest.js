@@ -1,4 +1,5 @@
-import { checkIfDocumentExists, getDocument, uploadToDB } from "../services/databaseFunctions.js";
+import { checkIfDocumentExists, getDocument, saveManifest } from "../services/databaseFunctions.js";
+
 /* 
 Before uploading, check if:
 a file was selected,  
@@ -8,37 +9,50 @@ if the file is a pdf file,
 CLEAN EVERYTHING UP!!!!
 */
 
-const verifyFileSignature = (file) => {
-  const bufferToString = Buffer.from(file).toString();
+const verifyFileInput = (req) => {
+  const { file } = req;
+  let check = false;
+
+  // If file object is empty respond with true and handle accordingly
+  if (!file) {
+    check = true;
+  }
+  return check;
+};
+
+const verifyFileSignature = (req) => {
+  const { buffer } = req.file;
+  const bufferToString = Buffer.from(buffer).toString();
   const byteArray = [...bufferToString].slice(0, 5);
   let check = false;
 
+  // File must contain the unique signature of %PDF- in it's buffer
   if (byteArray.toString() === "%,P,D,F,-") {
     check = true;
   }
   return check;
 };
 
-// Respond with appropriate HTTP codes AND CLEAN UP
+// Respond with appropriate HTTP codes, clean this up, and handle errors appropriately
 const uploadFile = async (req, res) => {
   switch (true) {
-    case !req.file:
-      res.status(200).json({ Status: "200 OK", Result: "No file has been selected" });
+    case verifyFileInput(req):
+      res.status(200).json({ Result: "No file has been selected" });
       break;
-    case verifyFileSignature(req.file.buffer):
+    case verifyFileSignature(req):
       try {
-        if (await checkIfDocumentExists(req.file.buffer)) {
-          res.status(200).json({ Status: "200 OK", Result: "Document number already exists" });
+        if (await checkIfDocumentExists(req)) {
+          res.status(200).json({ Result: "Document number already exists" });
         } else {
-          await uploadToDB(req.file.buffer);
-          res.status(200).json({ Status: "200 OK", Result: await getDocument(req.file.buffer) });
+          await saveManifest(req);
+          res.status(200).json({ Message: "200 OK", Result: await getDocument(req) });
         }
       } catch (error) {
         console.log(error);
       }
       break;
     default:
-      res.status(200).json({ Status: "200 OK", Result: "Error processing file" });
+      res.status(200).json({ Result: "Error processing file: Verify that the correct file type has been submitted (pdf)" });
   }
 };
 
