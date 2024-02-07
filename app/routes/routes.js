@@ -1,8 +1,5 @@
 import Router from "express";
 import multer from "multer";
-import verifyFile from "../controllers/uploadManifest.js";
-import verifyFileInput from "../controllers/uploadManifest.js";
-import { checkIfDocumentExists } from "../services/databaseFunctions.js";
 import uploadFile from "../controllers/uploadManifest.js";
 
 const router = Router();
