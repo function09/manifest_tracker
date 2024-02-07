@@ -1,4 +1,4 @@
-import { checkIfDocumentExists, getSingleDocument, saveManifest } from "../services/databaseFunctions.js";
+import { checkIfDocumentExists, getAllDocuments, getSingleDocument, saveManifest } from "../services/databaseFunctions.js";
 
 /* 
 Before uploading, check if:
@@ -45,14 +45,19 @@ const uploadFile = async (req, res) => {
           res.status(200).json({ Result: "Document number already exists" });
         } else {
           await saveManifest(req);
-          res.status(200).json({ Message: "200 OK" });
+          res.status(200).json({
+            status: "200 OK",
+            result: "Document saved successfully",
+            // Final build will show just the saved document
+            documents: await getAllDocuments(),
+          });
         }
       } catch (error) {
         console.log(error);
       }
       break;
     default:
-      res.status(200).json({ Result: "Error processing file: Verify that the correct file type has been submitted (pdf)" });
+      res.status(200).json({ Result: "Error processing file: Verify that the correct file type has been submitted (.pdf)" });
   }
 };
 
