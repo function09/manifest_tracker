@@ -7,9 +7,9 @@ import createManifestObject from "./pdfParse.js";
 const checkIfDocumentExists = async (req) => {
   let exists;
   const { buffer } = req.file;
-  const document = await createManifestObject(buffer);
 
   try {
+    const document = await createManifestObject(buffer);
     const findDocument = await Manifest.findOne({ documentNumber: document.documentNumber }, "-_id -__v");
 
     if (!findDocument) {
@@ -25,14 +25,23 @@ const checkIfDocumentExists = async (req) => {
 
 const getDocument = async (req) => {
   const { buffer } = req.file;
-  const document = await createManifestObject(buffer);
-  const findDocument = await Manifest.findOne({ document: document.documentNumber }, "-_id -__v").exec();
-  return findDocument;
+
+  try {
+    const document = await createManifestObject(buffer);
+    return await Manifest.findOne({ document: document.documentNumber }, "-_id -__v").exec();
+  } catch (error) {
+    console.log(error);
+  }
 };
 
 const saveManifest = async (req) => {
   const { buffer } = req.file;
-  await new Manifest({ ...(await createManifestObject(buffer)), UUID: uuidv4() }).save();
+
+  try {
+    return await new Manifest({ ...(await createManifestObject(buffer)), UUID: uuidv4() }).save();
+  } catch (error) {
+    console.log(error);
+  }
 };
 
 export { checkIfDocumentExists, getDocument, createManifestObject, saveManifest };
