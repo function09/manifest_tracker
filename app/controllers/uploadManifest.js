@@ -1,4 +1,4 @@
-import { checkIfDocumentExists, getDocument, saveManifest } from "../services/databaseFunctions.js";
+import { checkIfDocumentExists, getSingleDocument, saveManifest } from "../services/databaseFunctions.js";
 
 /* 
 Before uploading, check if:

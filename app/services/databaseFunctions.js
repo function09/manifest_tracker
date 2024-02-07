@@ -23,7 +23,7 @@ const checkIfDocumentExists = async (req) => {
   return exists;
 };
 
-const getDocument = async (req) => {
+const getSingleDocument = async (req) => {
   const { buffer } = req.file;
 
   try {
@@ -44,4 +44,4 @@ const saveManifest = async (req) => {
   }
 };
 
-export { checkIfDocumentExists, getDocument, createManifestObject, saveManifest };
+export { checkIfDocumentExists, getSingleDocument, createManifestObject, saveManifest };
