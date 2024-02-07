@@ -23,12 +23,9 @@ const checkIfDocumentExists = async (req) => {
   return exists;
 };
 
-const getSingleDocument = async (req) => {
-  const { buffer } = req.file;
-
+const getSingleDocument = async (id) => {
   try {
-    const document = await createManifestObject(buffer);
-    return await Manifest.findOne({ document: document.documentNumber }, "-_id -__v").exec();
+    return await Manifest.findOne({ UUID: id }, "-_id -__v").exec();
   } catch (error) {
     console.log(error);
   }
