@@ -1,7 +1,7 @@
 import Router from "express";
 import multer from "multer";
 import uploadFile from "../controllers/uploadManifest.js";
-import getAllDocumentsJSON from "../controllers/displayDocuments.js";
+import { getAllDocumentsJSON, getSingleDocumentJSON } from "../controllers/displayDocuments.js";
 
 const router = Router();
 
@@ -10,9 +10,7 @@ const upload = multer({ storage });
 
 router.get("/", getAllDocumentsJSON);
 
-router.get("/:id", (req, res) => {
-  res.send("GET route to display a single manifest");
-});
+router.get("/:id", getSingleDocumentJSON);
 
 router.post("/upload", upload.single("file"), uploadFile);
 
