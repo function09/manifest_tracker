@@ -33,7 +33,7 @@ const verifyFileSignature = (req) => {
   return check;
 };
 
-// Respond with appropriate HTTP codes, clean this up, and handle errors appropriately
+// Respond with appropriate HTTP codes, appropriate JSON, clean this up, and handle errors appropriately
 const uploadFile = async (req, res) => {
   switch (true) {
     case verifyFileInput(req):
