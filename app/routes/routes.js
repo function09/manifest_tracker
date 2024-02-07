@@ -1,15 +1,14 @@
 import Router from "express";
 import multer from "multer";
 import uploadFile from "../controllers/uploadManifest.js";
+import getAllDocumentsJSON from "../controllers/displayDocuments.js";
 
 const router = Router();
 
 const storage = multer.memoryStorage();
 const upload = multer({ storage });
 
-router.get("/", (req, res, next) => {
-  res.send("GET route to display all manifests");
-});
+router.get("/", getAllDocumentsJSON);
 
 router.get("/:id", (req, res) => {
   res.send("GET route to display a single manifest");
