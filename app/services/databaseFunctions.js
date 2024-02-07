@@ -36,7 +36,13 @@ const getSingleDocument = async (req) => {
 
 const getAllDocuments = async () => {
   try {
-    return await Manifest.find({}, "-_id -__v ").exec();
+    /* 
+    We are not including items here; 
+    as the number of documents increases, 
+    there will be many items -> potential slowdown 
+    */
+
+    return await Manifest.find({}, "-_id -__v -items").exec();
   } catch (error) {
     console.log(error);
   }
