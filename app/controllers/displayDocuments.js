@@ -1,7 +1,20 @@
-import { getAllDocuments } from "../services/databaseFunctions.js";
+import { getAllDocuments, getSingleDocument } from "../services/databaseFunctions.js";
 
 const getAllDocumentsJSON = async (req, res) => {
-  res.status(200).json({ Status: "200 OK", Manifests: await getAllDocuments() });
+  res.status(200).json({ status: "200 OK", manifests: await getAllDocuments() });
 };
 
-export default getAllDocumentsJSON;
+const getSingleDocumentJSON = async (req, res) => {
+  try {
+    const document = await getSingleDocument(req.params.id);
+
+    if (document === null) {
+      return res.status(404).json({ status: "404 not found", result: "Manifest does not exist" });
+    }
+    return res.status(200).json({ status: "200 OK", manifest: document });
+  } catch (error) {
+    console.log(error);
+  }
+};
+
+export { getAllDocumentsJSON, getSingleDocumentJSON };
