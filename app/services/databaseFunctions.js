@@ -34,6 +34,14 @@ const getSingleDocument = async (req) => {
   }
 };
 
+const getAllDocuments = async () => {
+  try {
+    return await Manifest.find({}, "-_id -__v ").exec();
+  } catch (error) {
+    console.log(error);
+  }
+};
+
 const saveManifest = async (req) => {
   const { buffer } = req.file;
 
@@ -44,4 +52,4 @@ const saveManifest = async (req) => {
   }
 };
 
-export { checkIfDocumentExists, getSingleDocument, createManifestObject, saveManifest };
+export { checkIfDocumentExists, getSingleDocument, getAllDocuments, createManifestObject, saveManifest };
