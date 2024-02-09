@@ -41,10 +41,10 @@ const uploadFile = async (req, res) => {
       break;
     case verifyFileSignature(req):
       try {
-        if (await checkIfDocumentExists(req)) {
+        if (await checkIfDocumentExists(req.file.buffer)) {
           res.status(200).json({ Result: "Document number already exists" });
         } else {
-          await saveManifest(req);
+          await saveManifest(req.file.buffer);
           res.status(200).json({
             status: "200 OK",
             result: "Document saved successfully",
