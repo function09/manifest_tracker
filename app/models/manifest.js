@@ -5,6 +5,7 @@ const { Schema } = mongoose;
 const manifestSchema = new Schema({
   sendingWarehouse: { type: String, required: true },
   documentNumber: { type: String, required: true },
+  materialDocNumber: { type: String },
   departureDate: { type: String, required: true },
   arrivalDate: { type: String, required: true },
   items: { type: Array, required: true },
