@@ -46,7 +46,7 @@ const getAllDocuments = async () => {
 
 const saveManifest = async (buffer) => {
   try {
-    return await new Manifest({ ...(await createManifestObject(buffer)), UUID: uuidv4() }).save();
+    return await new Manifest({ ...(await createManifestObject(buffer)) }).save();
   } catch (error) {
     console.log(error);
   }
