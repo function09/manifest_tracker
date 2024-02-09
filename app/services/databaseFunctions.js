@@ -52,4 +52,12 @@ const saveManifest = async (buffer) => {
   }
 };
 
-export { checkIfDocumentExists, getSingleDocument, getAllDocuments, createManifestObject, saveManifest };
+const deleteManifest = async (param) => {
+  try {
+    return await Manifest.findOneAndDelete({ UUID: param }).exec();
+  } catch (error) {
+    console.log(error);
+  }
+};
+
+export { checkIfDocumentExists, getSingleDocument, getAllDocuments, createManifestObject, saveManifest, deleteManifest };
