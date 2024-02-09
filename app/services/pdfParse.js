@@ -11,8 +11,10 @@ const extractManifestDetails = async (buffer) => {
     const manifestObject = {
       sendingWarehouse: data.match(/Warehouse:(.*)Document/)[1],
       documentNumber: data.match(/No.:(.*)Departure/)[1],
+      materialDocNumber: "",
       departureDate: data.match(/DepartureDate:(.*?)Time/)[1],
       arrivalDate: data.match(/ArrivalDate:(.*?)Time/)[1],
+      UUID: uuidv4(),
     };
     return manifestObject;
   } catch (error) {
