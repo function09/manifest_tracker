@@ -4,9 +4,8 @@ import createManifestObject from "./pdfParse.js";
 
 // database queries and such go here see if you can organize this better
 
-const checkIfDocumentExists = async (req) => {
+const checkIfDocumentExists = async (buffer) => {
   let exists;
-  const { buffer } = req.file;
 
   try {
     const document = await createManifestObject(buffer);
@@ -45,9 +44,7 @@ const getAllDocuments = async () => {
   }
 };
 
-const saveManifest = async (req) => {
-  const { buffer } = req.file;
-
+const saveManifest = async (buffer) => {
   try {
     return await new Manifest({ ...(await createManifestObject(buffer)), UUID: uuidv4() }).save();
   } catch (error) {
