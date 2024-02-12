@@ -1,4 +1,3 @@
-import { v4 as uuidv4 } from "uuid";
 import Manifest from "../models/manifest.js";
 import createManifestObject from "./pdfParse.js";
 
@@ -52,6 +51,14 @@ const saveManifest = async (buffer) => {
   }
 };
 
+const updateManifest = async (param, materialDocNumber) => {
+  try {
+    await Manifest.findOneAndUpdate({ UUID: param }, { materialDocNumber }).exec();
+  } catch (error) {
+    console.log(error);
+  }
+};
+
 const deleteManifest = async (param) => {
   try {
     return await Manifest.findOneAndDelete({ UUID: param }).exec();
@@ -60,4 +67,12 @@ const deleteManifest = async (param) => {
   }
 };
 
-export { checkIfDocumentExists, getSingleDocument, getAllDocuments, createManifestObject, saveManifest, deleteManifest };
+export {
+  checkIfDocumentExists,
+  getSingleDocument,
+  getAllDocuments,
+  createManifestObject,
+  saveManifest,
+  updateManifest,
+  deleteManifest,
+};
