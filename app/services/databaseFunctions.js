@@ -1,9 +1,7 @@
 import Manifest from "../models/manifest.js";
 import createManifestObject from "./pdfParse.js";
 
-// database queries and such go here see if you can organize this better
-
-const checkIfDocumentExists = async (buffer) => {
+const checkIfManifestExists = async (buffer) => {
   let exists;
 
   try {
@@ -21,7 +19,7 @@ const checkIfDocumentExists = async (buffer) => {
   return exists;
 };
 
-const getSingleDocument = async (id) => {
+const getSingleManifest = async (id) => {
   try {
     return await Manifest.findOne({ UUID: id }, "-_id -__v").exec();
   } catch (error) {
@@ -29,14 +27,13 @@ const getSingleDocument = async (id) => {
   }
 };
 
-const getAllDocuments = async () => {
-  try {
-    /* 
+const getAllManifests = async () => {
+  /* 
     We are not including items here; 
     as the number of documents increases, 
     there will be many items -> potential slowdown 
-    */
-
+  */
+  try {
     return await Manifest.find({}, "-_id -__v -items").exec();
   } catch (error) {
     console.log(error);
@@ -53,9 +50,9 @@ const saveManifest = async (buffer) => {
 
 const updateManifest = async (param, materialDocNumber) => {
   /* 
-Typically only need to keep track of the material doc number 
-after accepting manifests, no need to update everything else
-*/
+    Typically only need to keep track of the material doc number 
+    after accepting manifests, no need to update everything else
+  */
 
   try {
     return await Manifest.findOneAndUpdate({ UUID: param }, { materialDocNumber }).exec();
@@ -72,12 +69,4 @@ const deleteManifest = async (param) => {
   }
 };
 
-export {
-  checkIfDocumentExists,
-  getSingleDocument,
-  getAllDocuments,
-  createManifestObject,
-  saveManifest,
-  updateManifest,
-  deleteManifest,
-};
+export { checkIfManifestExists, getSingleManifest, getAllManifests, saveManifest, updateManifest, deleteManifest };
