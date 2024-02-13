@@ -1,9 +1,9 @@
 import Router from "express";
 import multer from "multer";
-import { getAllDocumentsController, getSingleDocumentController } from "../controllers/displayDocuments.js";
+import { getAllDocumentsController, getSingleDocumentController } from "../controllers/displayManifest.js";
 import uploadDocumentController from "../controllers/uploadManifest.js";
-import updateDocumentController from "../controllers/updateDocument.js";
-import deleteDocumentController from "../controllers/deleteDocument.js";
+import updateDocumentController from "../controllers/updateManifest.js";
+import deleteDocumentController from "../controllers/deleteManifest.js";
 
 const router = Router();
 
