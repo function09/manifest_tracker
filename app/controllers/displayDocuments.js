@@ -1,7 +1,11 @@
 import { getAllManifests, getSingleManifest } from "../services/databaseFunctions.js";
 
 const getAllDocumentsController = async (req, res) => {
-  res.status(200).json({ status: "200 OK", manifests: await getAllManifests() });
+  try {
+    res.status(200).json({ status: "200 OK", manifests: await getAllManifests() });
+  } catch (error) {
+    console.log(error);
+  }
 };
 
 const getSingleDocumentController = async (req, res) => {
