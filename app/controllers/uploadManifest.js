@@ -1,4 +1,4 @@
-import { checkIfDocumentExists, getAllDocuments, getSingleDocument, saveManifest } from "../services/databaseFunctions.js";
+import { checkIfManifestExists, getAllManifests, getSingleManifest, saveManifest } from "../services/databaseFunctions.js";
 
 /* 
 Before uploading, check if:
@@ -34,14 +34,14 @@ const verifyFileSignature = (req) => {
 };
 
 // Respond with appropriate HTTP codes, appropriate JSON, clean this up, and handle errors appropriately
-const uploadFile = async (req, res) => {
+const uploadDocumentController = async (req, res) => {
   switch (true) {
     case verifyFileInput(req):
       res.status(200).json({ Result: "No file has been selected" });
       break;
     case verifyFileSignature(req):
       try {
-        if (await checkIfDocumentExists(req.file.buffer)) {
+        if (await checkIfManifestExists(req.file.buffer)) {
           res.status(200).json({ Result: "Document number already exists" });
         } else {
           await saveManifest(req.file.buffer);
@@ -49,7 +49,7 @@ const uploadFile = async (req, res) => {
             status: "200 OK",
             result: "Document saved successfully",
             // Final build will show just the saved document
-            documents: await getAllDocuments(),
+            documents: await getAllManifests(),
           });
         }
       } catch (error) {
@@ -61,4 +61,4 @@ const uploadFile = async (req, res) => {
   }
 };
 
-export default uploadFile;
+export default uploadDocumentController;

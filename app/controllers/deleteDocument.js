@@ -1,6 +1,6 @@
 import { deleteManifest } from "../services/databaseFunctions.js";
 
-const deleteDocument = async (req, res) => {
+const deleteDocumentController = async (req, res) => {
   try {
     const document = await deleteManifest(req.params.id);
     if (document) {
@@ -13,4 +13,4 @@ const deleteDocument = async (req, res) => {
   }
 };
 
-export default deleteDocument;
+export default deleteDocumentController;
