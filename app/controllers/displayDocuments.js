@@ -2,7 +2,14 @@ import { getAllManifests, getSingleManifest } from "../services/databaseFunction
 
 const getAllDocumentsController = async (req, res) => {
   try {
-    res.status(200).json({ status: "200 OK", manifests: await getAllManifests() });
+    const manifests = await getAllManifests();
+
+    if (manifests.length === 0) {
+      // Do we really need this? Route will be needed to display all data on page load
+      res.status(200).json({ status: "200 OK", result: "Manifests do not exist" });
+    } else {
+      res.status(200).json({ status: "200 OK", result: manifests });
+    }
   } catch (error) {
     console.log(error);
   }
@@ -10,12 +17,13 @@ const getAllDocumentsController = async (req, res) => {
 
 const getSingleDocumentController = async (req, res) => {
   try {
-    const document = await getSingleManifest(req.params.id);
+    const manifest = await getSingleManifest(req.params.id);
 
-    if (document === null) {
-      return res.status(404).json({ status: "404 not found", result: "Manifest does not exist" });
+    if (manifest === null) {
+      res.status(404).json({ status: "404 not found", result: "Manifest does not exist" });
+    } else {
+      res.status(200).json({ status: "200 OK", result: manifest });
     }
-    return res.status(200).json({ status: "200 OK", manifest: document });
   } catch (error) {
     console.log(error);
   }

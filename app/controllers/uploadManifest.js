@@ -1,4 +1,4 @@
-import { checkIfManifestExists, getAllManifests, getSingleManifest, saveManifest } from "../services/databaseFunctions.js";
+import { checkIfManifestExists, saveManifest } from "../services/databaseFunctions.js";
 
 /* 
 Before uploading, check if:
@@ -37,19 +37,17 @@ const verifyFileSignature = (req) => {
 const uploadDocumentController = async (req, res) => {
   switch (true) {
     case verifyFileInput(req):
-      res.status(200).json({ Result: "No file has been selected" });
+      res.status(200).json({ result: "No file has been selected" });
       break;
     case verifyFileSignature(req):
       try {
         if (await checkIfManifestExists(req.file.buffer)) {
-          res.status(200).json({ Result: "Document number already exists" });
+          res.status(200).json({ result: "Document number already exists" });
         } else {
           await saveManifest(req.file.buffer);
           res.status(200).json({
             status: "200 OK",
             result: "Document saved successfully",
-            // Final build will show just the saved document
-            documents: await getAllManifests(),
           });
         }
       } catch (error) {
