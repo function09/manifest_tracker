@@ -1,9 +1,9 @@
 import express from "express";
 import morgan from "morgan";
 import mongoose from "mongoose";
+import cors from "cors";
 import router from "./routes/routes.js";
 import "dotenv/config";
-import cors from "cors";
 
 const app = express();
 
