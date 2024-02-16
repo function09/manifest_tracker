@@ -2,7 +2,8 @@ import express from "express";
 import morgan from "morgan";
 import mongoose from "mongoose";
 import cors from "cors";
-import router from "./routes/routes.js";
+import manifests from "./routes/routes.js";
+import users from "./routes/userRoutes.js";
 import "dotenv/config";
 
 const app = express();
@@ -17,7 +18,8 @@ app.use(express.urlencoded({ extended: false }));
 app.use(morgan("dev"));
 app.use(cors(corsOptions));
 
-app.use("/api/v1/manifests", router);
+app.use("/api/v1/manifests", manifests);
+app.use("/users", users);
 
 // MongoDB connection
 const { CONNECTION_STRING } = process.env;
