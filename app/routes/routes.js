@@ -4,20 +4,21 @@ import { getAllDocumentsController, getSingleDocumentController } from "../contr
 import uploadDocumentController from "../controllers/uploadManifest.js";
 import updateDocumentController from "../controllers/updateManifest.js";
 import deleteDocumentController from "../controllers/deleteManifest.js";
+import authenticateToken from "../middleware/authentication.js";
 
 const router = Router();
 
 const storage = multer.memoryStorage();
 const upload = multer({ storage });
 
-router.get("/", getAllDocumentsController);
+router.get("/", authenticateToken, getAllDocumentsController);
 
-router.get("/:id", getSingleDocumentController);
+router.get("/:id", authenticateToken, getSingleDocumentController);
 
-router.post("/upload", upload.single("file"), uploadDocumentController);
+router.post("/upload", authenticateToken, upload.single("file"), uploadDocumentController);
 
-router.put("/update/:id", updateDocumentController);
+router.put("/update/:id", authenticateToken, updateDocumentController);
 
-router.delete("/delete/:id", deleteDocumentController);
+router.delete("/delete/:id", authenticateToken, deleteDocumentController);
 
 export default router;
