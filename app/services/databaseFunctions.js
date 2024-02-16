@@ -53,10 +53,11 @@ const updateManifest = async (param, materialDocNumber) => {
   /* 
     Typically only need to keep track of the material doc number 
     after accepting manifests, no need to update everything else
+    don't need _id and __v
   */
 
   try {
-    return await Manifest.findOneAndUpdate({ UUID: param }, { materialDocNumber }).exec();
+    return await Manifest.findOneAndUpdate({ UUID: param }, { materialDocNumber }, { new: true }).exec();
   } catch (error) {
     console.log(error);
   }
