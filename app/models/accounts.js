@@ -2,11 +2,11 @@ import mongoose from "mongoose";
 
 const { Schema } = mongoose;
 
-const accountsSchema = new Schema({
-  email: { type: String, required: true },
+const userSchema = new Schema({
+  username: { type: String, required: true },
   password: { type: String, required: true },
 });
 
-const Accounts = mongoose.model("accounts", accountsSchema);
+const User = mongoose.model("accounts", userSchema);
 
-export default Accounts;
+export default User;
