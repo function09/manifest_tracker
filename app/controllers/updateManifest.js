@@ -12,15 +12,15 @@ const validationChain = body("materialDocNumber")
 const updateDocumentController = [
   validationChain,
   async (req, res) => {
-    try {
-      const errors = validationResult(req);
-      const findAndUpdateManifest = await updateManifest(req.params.id, req.body.materialDocNumber);
+    const errors = validationResult(req);
+    const findAndUpdateManifest = await updateManifest(req.params.id, req.body.materialDocNumber);
 
+    try {
       if (!errors.isEmpty()) {
-        res.status(422).json({ Status: "422 Unprocessable Content", Result: errors.array() });
-      } else {
-        res.status(200).json({ Status: "200 OK", Result: findAndUpdateManifest });
+        return res.status(422).json({ error: errors.array() });
       }
+
+      return res.status(200).json({ message: findAndUpdateManifest });
     } catch (error) {
       console.log(error);
     }

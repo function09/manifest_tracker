@@ -9,17 +9,18 @@ if the file is a pdf file,
 CLEAN EVERYTHING UP!!!!
 */
 
+// use early returns
 const verifyFileInput = (req) => {
   const { file } = req;
   let check = false;
 
-  // If file object is empty respond with true and handle accordingly
   if (!file) {
     check = true;
   }
   return check;
 };
 
+// use early returns
 const verifyFileSignature = (req) => {
   const { buffer } = req.file;
   const bufferToString = Buffer.from(buffer).toString();
@@ -33,6 +34,7 @@ const verifyFileSignature = (req) => {
   return check;
 };
 
+// Refactor this to work as false
 // Respond with appropriate HTTP codes, appropriate JSON, clean this up, and handle errors appropriately
 const uploadDocumentController = async (req, res) => {
   switch (true) {
@@ -46,7 +48,6 @@ const uploadDocumentController = async (req, res) => {
         } else {
           await saveManifest(req.file.buffer);
           res.status(200).json({
-            status: "200 OK",
             result: "Document saved successfully",
           });
         }
@@ -55,7 +56,7 @@ const uploadDocumentController = async (req, res) => {
       }
       break;
     default:
-      res.status(200).json({ Result: "Error processing file: Verify that the correct file type has been submitted (.pdf)" });
+      res.status(200).json({ result: "Error processing file: Verify that the correct file type has been submitted (.pdf)" });
   }
 };
 
