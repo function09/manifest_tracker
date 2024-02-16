@@ -19,6 +19,7 @@ const checkIfManifestExists = async (buffer) => {
   return exists;
 };
 
+// clean up "expected return"
 const getSingleManifest = async (id) => {
   try {
     return await Manifest.findOne({ UUID: id }, "-_id -__v").exec();
