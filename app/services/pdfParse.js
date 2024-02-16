@@ -6,8 +6,8 @@ const extractManifestDetails = async (buffer) => {
     /*
     If the accession of the text property were after the pdf call, 
     it would not resolve, the then fixes this
-
     */
+
     const data = await pdf(buffer).then((result) => result.text.replace(/\s/g, ""));
     const manifestObject = {
       sendingWarehouse: (data.match(/Warehouse:(.*)Document/) ?? [])[1] ?? "",

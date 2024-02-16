@@ -18,7 +18,7 @@ const loginController = async (req, res) => {
   }
 
   // Can still use key after relogging - curious about this
-  const token = jwt.sign({ user: req.body.username }, TOKEN_SECRET, { expiresIn: "1h" });
+  const token = jwt.sign({ user: req.body.username }, TOKEN_SECRET, { expiresIn: "8h" });
 
   return res.status(200).json({ result: `User, ${user.username}, signed on successfully.`, token });
 };
