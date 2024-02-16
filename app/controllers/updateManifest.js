@@ -20,6 +20,10 @@ const updateDocumentController = [
         return res.status(422).json({ error: errors.array() });
       }
 
+      if (!findAndUpdateManifest) {
+        return res.status(404).json({ message: "manifest does not exist" });
+      }
+
       return res.status(200).json({ message: findAndUpdateManifest });
     } catch (error) {
       console.log(error);
