@@ -32,21 +32,23 @@ const verifyFileSignature = (req) => {
 };
 
 // Respond with appropriate HTTP codes, appropriate JSON, clean this up, and handle errors appropriately
+// refactor to use if statements
 const uploadDocumentController = async (req, res) => {
-  switch (true) {
-    case verifyFileInput(req):
-      res.status(200).json({ message: "No file has been selected" });
-      break;
-    case verifyFileSignature(req):
-      res.status(200).json({ message: "Verify that the correct file type has been submitted (.pdf)" });
-      break;
-    case await checkIfManifestExists(req.file.buffer):
-      res.status(200).json({ message: "Document number already exists" });
-      break;
-    default:
-      await saveManifest(req.file.buffer);
-      res.status(200).json({ message: "Document saved successfully" });
+  if (verifyFileInput(req)) {
+    return res.status(200).json({ message: "No file has been selected" });
   }
+
+  if (verifyFileSignature(req)) {
+    return res.status(200).json({ message: "Verify that the correct file type has been submitted (.pdf)" });
+  }
+
+  if (await checkIfManifestExists(req.file.buffer)) {
+    return res.status(200).json({ message: "Document number already exists" });
+  }
+
+  await saveManifest(req.file.buffer);
+
+  return res.status(200).json({ message: "Document saved successfully" });
 };
 
 export default uploadDocumentController;
