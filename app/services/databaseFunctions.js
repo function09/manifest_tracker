@@ -2,21 +2,18 @@ import Manifest from "../models/manifest.js";
 import createManifestObject from "./pdfParse.js";
 
 const checkIfManifestExists = async (buffer) => {
-  let exists;
-
   try {
     const document = await createManifestObject(buffer);
     const findDocument = await Manifest.findOne({ documentNumber: document.documentNumber }, "-_id -__v");
 
     if (!findDocument) {
-      exists = false;
-    } else {
-      exists = true;
+      return false;
     }
+
+    return true;
   } catch (error) {
     console.log(error);
   }
-  return exists;
 };
 
 // clean up "expected return"
