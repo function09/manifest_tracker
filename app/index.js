@@ -2,7 +2,7 @@ import express from "express";
 import morgan from "morgan";
 import mongoose from "mongoose";
 import cors from "cors";
-import manifests from "./routes/routes.js";
+import manifests from "./routes/manifestRoutes.js";
 import users from "./routes/userRoutes.js";
 import "dotenv/config";
 
