@@ -5,11 +5,8 @@ Before uploading, check if:
 a file was selected,  
 document # already exists in db,
 if the file is a pdf file,
-
-CLEAN EVERYTHING UP!!!!
 */
 
-// use early returns
 const verifyFileInput = (req) => {
   const { file } = req;
 
@@ -34,7 +31,6 @@ const verifyFileSignature = (req) => {
   return false;
 };
 
-// Refactor this to work as false
 // Respond with appropriate HTTP codes, appropriate JSON, clean this up, and handle errors appropriately
 const uploadDocumentController = async (req, res) => {
   switch (true) {
