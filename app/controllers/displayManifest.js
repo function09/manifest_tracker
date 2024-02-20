@@ -1,9 +1,9 @@
 import { getAllManifests, getSingleManifest } from "../services/databaseFunctions.js";
 
-const getAllDocumentsController = async (req, res) => {
-  const manifests = await getAllManifests();
-
+const getAllDocumentsController = async (res) => {
   try {
+    const manifests = await getAllManifests();
+
     if (manifests.length === 0) {
       return res.status(200).json({ message: "Manifests do not exist" });
     }
@@ -14,9 +14,9 @@ const getAllDocumentsController = async (req, res) => {
 };
 
 const getSingleDocumentController = async (req, res) => {
-  const manifest = await getSingleManifest(req.params.id);
-
   try {
+    const manifest = await getSingleManifest(req.params.id);
+
     if (manifest === null) {
       return res.status(404).json({ message: "Manifest does not exist" });
     }

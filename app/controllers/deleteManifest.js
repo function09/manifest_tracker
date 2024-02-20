@@ -1,9 +1,9 @@
 import { deleteManifest } from "../services/databaseFunctions.js";
 
 const deleteDocumentController = async (req, res) => {
-  const document = await deleteManifest(req.params.id);
-
   try {
+    const document = await deleteManifest(req.params.id);
+
     if (!document) {
       return res.status(404).json({ message: "Document number does not exist" });
     }

@@ -2,12 +2,18 @@ import bcrypt from "bcryptjs";
 import User from "../models/users.js";
 
 // return await rule deprecated in ESLint
-const findUser = async (username) => await User.findOne({ username });
+const findUser = async (username) => {
+  try {
+    return await User.findOne({ username });
+  } catch (error) {
+    return error;
+  }
+};
 
 const userExists = async (username) => {
-  const user = await User.findOne({ username });
-
   try {
+    const user = await User.findOne({ username });
+
     if (user != null) {
       return true;
     }

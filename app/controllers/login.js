@@ -4,9 +4,10 @@ import { findUser, userExists } from "../services/userDatabaseFunctions.js";
 import "dotenv/config";
 
 const loginController = async (req, res) => {
-  const user = await findUser(req.body.username);
   const { TOKEN_SECRET } = process.env;
   try {
+    const user = await findUser(req.body.username);
+
     if (!(await userExists(req.body.username))) {
       return res.status(422).json({ message: "Username does not exist." });
     }
