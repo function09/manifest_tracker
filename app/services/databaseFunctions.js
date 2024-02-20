@@ -6,11 +6,11 @@ const checkIfManifestExists = async (buffer) => {
     const document = await createManifestObject(buffer);
     const findDocument = await Manifest.findOne({ documentNumber: document.documentNumber }, "-_id -__v");
 
-    if (!findDocument) {
-      return false;
+    if (findDocument) {
+      return true;
     }
 
-    return true;
+    return false;
   } catch (error) {
     console.log(error);
   }
