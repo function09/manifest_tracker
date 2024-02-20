@@ -18,7 +18,7 @@ const extractManifestDetails = async (buffer) => {
     };
     return manifestObject;
   } catch (error) {
-    console.log(error);
+    return error;
   }
 };
 
@@ -44,7 +44,7 @@ const extractMaterialAndBatchID = async (buffer) => {
 
     return materialAndBatchIDList;
   } catch (error) {
-    console.log(error);
+    return error;
   }
 };
 
@@ -62,7 +62,7 @@ const extractProductDescription = async (buffer) => {
 
     return DUFLAndDUTR || DryFlower;
   } catch (error) {
-    console.log(error);
+    return error;
   }
 };
 
@@ -72,7 +72,7 @@ const extractQuantity = async (buffer) => {
 
     return data.text.match(/Qty:\d+.\d+/g);
   } catch (error) {
-    console.log(error);
+    return error;
   }
 };
 
@@ -91,7 +91,7 @@ const createItems = async (buffer) => {
 
     return itemsObject;
   } catch (error) {
-    console.log(error);
+    return error;
   }
 };
 
@@ -101,7 +101,7 @@ const createManifestObject = async (buffer) => {
     const manifestData = { ...(await extractManifestDetails(buffer)), items: await createItems(buffer), UUID: uuidv4() };
     return manifestData;
   } catch (error) {
-    console.log(error);
+    return error;
   }
 };
 

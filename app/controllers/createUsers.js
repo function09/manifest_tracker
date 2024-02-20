@@ -5,14 +5,14 @@ const createUserController = async (req, res) => {
   const user = await userExists(userName);
   try {
     if (user) {
-      return res.status(409).json({ error: "username already exists" });
+      return res.status(409).json({ message: "username already exists" });
     }
 
     await createUser(userName, password);
 
     return res.status(200).json({ message: "user account created successfully" });
   } catch (error) {
-    console.log(error);
+    return res.status(500).json({ error });
   }
 };
 
