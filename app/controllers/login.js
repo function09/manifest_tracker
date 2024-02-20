@@ -8,21 +8,21 @@ const loginController = async (req, res) => {
   const { TOKEN_SECRET } = process.env;
   try {
     if (!(await userExists(req.body.username))) {
-      return res.status(422).json({ error: "Username does not exist." });
+      return res.status(422).json({ message: "Username does not exist." });
     }
 
     const match = await bcrypt.compare(req.body.password, user.password);
 
     if (!match) {
-      return res.status(401).json({ error: "Incorrect credentials." });
+      return res.status(401).json({ message: "Incorrect credentials." });
     }
 
     // Can still use key after relogging - curious about this
     const token = jwt.sign({ user: req.body.username }, TOKEN_SECRET, { expiresIn: "8h" });
 
-    return res.status(200).json({ result: `User, ${user.username}, signed on successfully.`, token });
+    return res.status(200).json({ message: `User, ${user.username}, signed on successfully.`, token });
   } catch (error) {
-    console.log(error);
+    return res.status(500).json({ error });
   }
 };
 

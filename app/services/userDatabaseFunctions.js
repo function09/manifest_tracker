@@ -12,7 +12,7 @@ const userExists = async (username) => {
       return true;
     }
   } catch (error) {
-    console.log(error);
+    return error;
   }
   return false;
 };
@@ -23,7 +23,7 @@ const createUser = async (username, password) => {
 
     return new User({ username, password: hashedPassword }).save();
   } catch (error) {
-    console.log(error);
+    return error;
   }
 };
 

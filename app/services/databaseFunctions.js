@@ -6,13 +6,13 @@ const checkIfManifestExists = async (buffer) => {
     const document = await createManifestObject(buffer);
     const findDocument = await Manifest.findOne({ documentNumber: document.documentNumber }, "-_id -__v");
 
-    if (!findDocument) {
-      return false;
+    if (findDocument) {
+      return true;
     }
 
-    return true;
+    return false;
   } catch (error) {
-    console.log(error);
+    return error;
   }
 };
 
@@ -21,7 +21,7 @@ const getSingleManifest = async (id) => {
   try {
     return await Manifest.findOne({ UUID: id }, "-_id -__v").exec();
   } catch (error) {
-    console.log(error);
+    return error;
   }
 };
 
@@ -34,7 +34,7 @@ const getAllManifests = async () => {
   try {
     return await Manifest.find({}, "-_id -__v -items").exec();
   } catch (error) {
-    console.log(error);
+    return error;
   }
 };
 
@@ -42,7 +42,7 @@ const saveManifest = async (buffer) => {
   try {
     return await new Manifest({ ...(await createManifestObject(buffer)) }).save();
   } catch (error) {
-    console.log(error);
+    return error;
   }
 };
 
@@ -56,7 +56,7 @@ const updateManifest = async (param, materialDocNumber) => {
   try {
     return await Manifest.findOneAndUpdate({ UUID: param }, { materialDocNumber }, { new: true }).exec();
   } catch (error) {
-    console.log(error);
+    return error;
   }
 };
 
@@ -64,7 +64,7 @@ const deleteManifest = async (param) => {
   try {
     return await Manifest.findOneAndDelete({ UUID: param }).exec();
   } catch (error) {
-    console.log(error);
+    return error;
   }
 };
 
