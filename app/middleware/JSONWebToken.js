@@ -12,19 +12,18 @@ const authenticateToken = (req, res, next) => {
   const tokenParts = authHeader.split(" ");
 
   if (tokenParts.length !== 2 || tokenParts[0].toLowerCase() !== "bearer") {
-    return res.status(401).json({ messae: "Authorization failed. No access token." });
+    return res.status(401).json({ message: "Authorization failed. No access token." });
   }
 
   const token = tokenParts[1];
 
   jwt.verify(token, TOKEN_SECRET, (error, decoded) => {
     if (error) {
-      return res.status(500).json({ error });
+      return next(error);
     }
     req.user = decoded.user;
-    return req.user;
+    return next();
   });
-  return next();
 };
 
 export default authenticateToken;
