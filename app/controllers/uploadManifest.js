@@ -11,13 +11,22 @@ const verifyFileInput = (req) => {
   const { file } = req;
 
   if (!file) {
-    return false;
+    return true;
   }
 
-  return true;
+  return false;
 };
 
-// use early returns
+const verifyMIMEType = (req) => {
+  const { mimetype } = req.file;
+
+  if (mimetype !== "application/pdf") {
+    return true;
+  }
+
+  return false;
+};
+
 const verifyFileSignature = (req) => {
   const { buffer } = req.file;
   const bufferToString = Buffer.from(buffer).toString();
@@ -25,28 +34,32 @@ const verifyFileSignature = (req) => {
 
   // File must contain the unique signature of %PDF- in it's buffer
   if (byteArray.toString() !== "%,P,D,F,-") {
-    return false;
+    return true;
   }
 
-  return true;
+  return false;
 };
 
 const uploadDocumentController = async (req, res) => {
-  if (!verifyFileInput(req)) {
-    return res.status(400).json({ message: "No file has been selected" });
+  if (verifyFileInput(req)) {
+    return res.status(400).json({ message: "no file has been selected" });
   }
 
-  if (!verifyFileSignature(req)) {
-    return res.status(400).json({ message: "Verify that the file is a PDF" });
+  if (verifyMIMEType(req)) {
+    return res.status(400).json({ message: "verify that the file extension is .pdf" });
+  }
+
+  if (verifyFileSignature(req)) {
+    return res.status(400).json({ message: "verify that the file is a PDF" });
   }
   try {
     if (await checkIfManifestExists(req.file.buffer)) {
-      return res.status(400).json({ message: "Document number already exists" });
+      return res.status(400).json({ message: "document number already exists" });
     }
 
     await saveManifest(req.file.buffer);
 
-    return res.status(200).json({ message: "Document saved successfully" });
+    return res.status(200).json({ message: "document saved successfully" });
   } catch (error) {
     return res.status(500).json({ error });
   }
