@@ -1,3 +1,4 @@
+import mime from "mime";
 import { checkIfManifestExists, saveManifest } from "../services/databaseFunctions.js";
 
 /* 
@@ -18,9 +19,9 @@ const verifyFileInput = (req) => {
 };
 
 const verifyMIMEType = (req) => {
-  const { mimetype } = req.file;
+  const extension = mime.getExtension(req.file.mimetype);
 
-  if (mimetype !== "application/pdf") {
+  if (extension !== "pdf") {
     return true;
   }
 
@@ -56,9 +57,7 @@ const uploadDocumentController = async (req, res) => {
     if (await checkIfManifestExists(req.file.buffer)) {
       return res.status(400).json({ message: "document number already exists" });
     }
-
     await saveManifest(req.file.buffer);
-
     return res.status(200).json({ message: "document saved successfully" });
   } catch (error) {
     return res.status(500).json({ error });
