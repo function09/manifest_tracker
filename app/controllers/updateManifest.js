@@ -11,14 +11,15 @@ const validationChain = body("materialDocNumber")
 
 const updateDocumentController = [
   validationChain,
-  async (req, res) => {
+  async (req, res, next) => {
     const errors = validationResult(req);
-    const findAndUpdateManifest = await updateManifest(req.params.id, req.body.materialDocNumber);
 
     try {
       if (!errors.isEmpty()) {
-        return res.status(422).json({ error: errors.array() });
+        return res.status(422).json({ message: errors.array() });
       }
+
+      const findAndUpdateManifest = await updateManifest(req.params.id, req.body.materialDocNumber);
 
       if (!findAndUpdateManifest) {
         return res.status(404).json({ message: "manifest does not exist" });

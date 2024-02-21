@@ -1,6 +1,6 @@
 import { getAllManifests, getSingleManifest } from "../services/databaseFunctions.js";
 
-const getAllDocumentsController = async (res) => {
+const getAllDocumentsController = async (req, res) => {
   try {
     const manifests = await getAllManifests();
 

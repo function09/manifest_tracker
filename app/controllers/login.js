@@ -9,7 +9,7 @@ const loginController = async (req, res) => {
     const user = await findUser(req.body.username);
 
     if (!(await userExists(req.body.username))) {
-      return res.status(422).json({ message: "Username does not exist." });
+      return res.status(422).json({ message: "Username or password is incorrect." });
     }
 
     const match = await bcrypt.compare(req.body.password, user.password);
