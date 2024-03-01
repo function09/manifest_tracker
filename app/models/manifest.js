@@ -2,7 +2,6 @@ import mongoose from "mongoose";
 
 const { Schema } = mongoose;
 
-// Entries are not required as if they're blank, they display as an empty string
 const manifestSchema = new Schema({
   sendingWarehouse: { type: String },
   documentNumber: { type: String },
@@ -11,6 +10,10 @@ const manifestSchema = new Schema({
   arrivalDate: { type: String },
   items: { type: Array },
   UUID: { type: String },
+});
+
+manifestSchema.virtual("id").get(function () {
+  return `/${this.UUID}`;
 });
 
 const Manifest = mongoose.model("manifest", manifestSchema);
