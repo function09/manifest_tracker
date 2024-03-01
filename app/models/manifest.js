@@ -2,18 +2,15 @@ import mongoose from "mongoose";
 
 const { Schema } = mongoose;
 
+// Entries are not required as if they're blank, they display as an empty string
 const manifestSchema = new Schema({
-  sendingWarehouse: { type: String, required: true },
-  documentNumber: { type: String, required: true },
+  sendingWarehouse: { type: String },
+  documentNumber: { type: String },
   materialDocNumber: { type: String },
-  departureDate: { type: String, required: true },
-  arrivalDate: { type: String, required: true },
-  items: { type: Array, required: true },
-  UUID: { type: String, required: true },
-});
-
-manifestSchema.virtual("id").get(function () {
-  return `/${this.UUID}`;
+  departureDate: { type: String },
+  arrivalDate: { type: String },
+  items: { type: Array },
+  UUID: { type: String },
 });
 
 const Manifest = mongoose.model("manifest", manifestSchema);
