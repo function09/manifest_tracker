@@ -31,7 +31,7 @@ async function main() {
 }
 
 main().catch((error) => {
-  throw error;
+  console.log(error);
 });
 
 export default app;
