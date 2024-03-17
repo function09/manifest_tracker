@@ -1,4 +1,4 @@
-import {AnalyticalTable, FlexBox, Button} from "@ui5/webcomponents-react"
+import {AnalyticalTable, FlexBox, Button, FileUploader} from "@ui5/webcomponents-react"
 
 export default function DocumentTable() {
 
@@ -45,6 +45,13 @@ export default function DocumentTable() {
     ]
 
     return (
+        <div>
         <AnalyticalTable columns={tableColumns}/>
+        <FileUploader hideInput>
+            <Button>
+                Upload single file
+            </Button>
+        </FileUploader>
+        </div>
     )
 }
