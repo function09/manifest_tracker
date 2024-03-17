@@ -1,23 +1,58 @@
 import "@ui5/webcomponents-icons/dist/AllIcons.js";
 import { useEffect, useState } from "react"
-import {AnalyticalTable, FlexBox, Button, FileUploader} from "@ui5/webcomponents-react"
-import fetchManifests from "../networkRequests/fetchRequests"
+import {AnalyticalTable, FlexBox, Button, FileUploader, Dialog} from "@ui5/webcomponents-react"
+import { NoManifestDialog } from "./Dialogs";
 
 export default function DocumentTable() {
     const [data, setData] = useState([])
+    const [message, setMessage] = useState("")
+    const [isEmpty, setIsEmpty] = useState(true)
+    const [error, setError] = useState(null)
 
-    useEffect(()=>{
-        // Handle when the array returned is empty, an error occurs as a result
-        const fetchData = async ()=> {
-            try{
-                const manifestData =  await fetchManifests()
-                setData(manifestData)
-            }catch(error){
-                console.log(error)
+    useEffect(()=> {
+        const fetchManifests = async () => {
+            try {
+              const response = await fetch('http://localhost:3000/api/v1/manifests');
+          
+              if (!response.ok) {
+                const message = `An error has occured: ${response.status}`;
+                throw new Error(message);
+              }
+          
+              const manifests = await response.json();
+              const result = manifests.message;
+
+              if(typeof result === "string"){
+                setData([])
+                setMessage(result)
+              } else{
+                setData(result)
+                setIsEmpty(false)
+              }
+            } catch (error) {
+              setError(error)
             }
-        }
-        fetchData()
+            
+          };
+          fetchManifests()
     }, [])
+    // const fetchData = async () =>{
+    //     try{
+    //         // rename this later
+    //         const result = await fetchManifests()
+
+    //         if(typeof result === "string"){
+    //             setData([])
+    //             setMessage(result)
+    //         } else{
+    //             setData(result)
+    //             setIsEmpty(false)
+    //         }
+
+    //     }catch(error){
+    //         setError(error)
+    //     }
+    // }
 
     const tableColumns = [
             {
@@ -62,13 +97,26 @@ export default function DocumentTable() {
     ]
 
     return (
-        <div>
-        <AnalyticalTable columns={tableColumns} data={data}/>
-        <FileUploader hideInput>
-            <Button>
-                Upload single file
-            </Button>
-        </FileUploader>
-        </div>
+        <>
+         <>
+            {error && <Dialog open={true} 
+                    headerText="Error" 
+                    footer={
+                    <Button>Close</Button>
+                    }>
+                    {error.message}
+                    </Dialog>}
+            {!error && isEmpty ? (
+                <NoManifestDialog message={message}/>
+            ) : (
+                <>
+                    <AnalyticalTable columns={tableColumns} data={data}/>
+                    <FileUploader hideInput>
+                        <Button>Upload single file</Button>
+                    </FileUploader>
+                </>
+            )}
+        </>
+        </>
     )
 }
