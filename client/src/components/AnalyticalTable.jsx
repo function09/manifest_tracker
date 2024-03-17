@@ -1,6 +1,23 @@
+import "@ui5/webcomponents-icons/dist/AllIcons.js";
+import { useEffect, useState } from "react"
 import {AnalyticalTable, FlexBox, Button, FileUploader} from "@ui5/webcomponents-react"
+import fetchManifests from "../networkRequests/fetchRequests"
 
 export default function DocumentTable() {
+    const [data, setData] = useState([])
+
+    useEffect(()=>{
+        // Handle when the array returned is empty, an error occurs as a result
+        const fetchData = async ()=> {
+            try{
+                const manifestData =  await fetchManifests()
+                setData(manifestData)
+            }catch(error){
+                console.log(error)
+            }
+        }
+        fetchData()
+    }, [])
 
     const tableColumns = [
             {
@@ -37,7 +54,7 @@ export default function DocumentTable() {
                         <FlexBox>
                             <Button icon="edit"/>
                             <Button icon="delete"/>
-                            <Button icon= "activity-items" />
+                            <Button icon= "activity-items"/>
                         </FlexBox>
                     )
                 }
@@ -46,7 +63,7 @@ export default function DocumentTable() {
 
     return (
         <div>
-        <AnalyticalTable columns={tableColumns}/>
+        <AnalyticalTable columns={tableColumns} data={data}/>
         <FileUploader hideInput>
             <Button>
                 Upload single file
