@@ -9,50 +9,68 @@ export default function DocumentTable() {
     const [isEmpty, setIsEmpty] = useState(true)
     const [error, setError] = useState(null)
 
-    useEffect(()=> {
-        const fetchManifests = async () => {
-            try {
-              const response = await fetch('http://localhost:3000/api/v1/manifests');
-          
-              if (!response.ok) {
-                const message = `An error has occured: ${response.status}`;
-                throw new Error(message);
-              }
-          
-              const manifests = await response.json();
-              const result = manifests.message;
+    // Add a loading modal to display as requests are being sent and processed by server
+    const fetchManifests = async () => {
+        try {
+          const response = await fetch('http://localhost:3000/api/v1/manifests');
+      
+          if (!response.ok) {
+            const message = `An error has occured: ${response.status}`;
+            throw new Error(message);
+          }
+      
+          const manifests = await response.json();
+          const result = manifests.message;
 
-              if(typeof result === "string"){
-                setData([])
-                setMessage(result)
-              } else{
-                setData(result)
-                setIsEmpty(false)
-              }
-            } catch (error) {
-              setError(error)
-            }
-            
-          };
+          if(typeof result === "string"){
+            setData([])
+            setMessage(result)
+          } else{
+            setData(result)
+            setIsEmpty(false)
+          }
+        } catch (error) {
+          setError(error)
+        }
+      };
+
+    useEffect(()=> {
           fetchManifests()
     }, [])
-    // const fetchData = async () =>{
-    //     try{
-    //         // rename this later
-    //         const result = await fetchManifests()
 
-    //         if(typeof result === "string"){
-    //             setData([])
-    //             setMessage(result)
-    //         } else{
-    //             setData(result)
-    //             setIsEmpty(false)
-    //         }
+    
+    /*
+    Select the file, create a new form data object, 
+    use the form data object to send the file to the server for processing
+    */
+    const uploadManifest = async (event)=>{
+        const file = event.target.files[0]
 
-    //     }catch(error){
-    //         setError(error)
-    //     }
-    // }
+        if(!file) return 
+
+        const formData = new FormData()
+        
+        // consider changing "file" to "manifest" in both server-side and client
+        formData.append("file", file)
+
+        const fetchOptions = {
+            method: "POST",
+            body: formData,
+        }
+
+        try{
+            const response = await fetch("http://localhost:3000/api/v1/manifests/upload", fetchOptions)
+
+            if(!response.ok){
+                const message = `An error has occured: ${response.status}`;
+                throw new Error(message);
+            }
+
+            fetchManifests()
+        }catch(error){
+            setError(error)
+        }     
+    }
 
     const tableColumns = [
             {
@@ -107,7 +125,7 @@ export default function DocumentTable() {
                     {error.message}
                     </Dialog>}
             {!error && isEmpty ? (
-                <NoManifestDialog message={message}/>
+                <NoManifestDialog message={message} upload={uploadManifest}/>
             ) : (
                 <>
                     <AnalyticalTable columns={tableColumns} data={data}/>
