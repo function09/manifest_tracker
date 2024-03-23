@@ -1,12 +1,13 @@
 import "@ui5/webcomponents-icons/dist/AllIcons.js";
 import { useEffect, useState } from "react"
-import {AnalyticalTable, FlexBox, Button, FileUploader, Dialog} from "@ui5/webcomponents-react"
-import { NoManifestDialog } from "./Dialogs";
+import {AnalyticalTable, FlexBox, Button, FileUploader} from "@ui5/webcomponents-react"
+import { ManifestDialog } from "./Dialogs";
 
 export default function DocumentTable() {
     const [data, setData] = useState([])
     const [message, setMessage] = useState("")
     const [isEmpty, setIsEmpty] = useState(true)
+    const [display, setDisplay] = useState(false)
     const [error, setError] = useState(null)
 
     // Add a loading modal to display as requests are being sent and processed by server
@@ -25,9 +26,11 @@ export default function DocumentTable() {
           if(typeof result === "string"){
             setData([])
             setMessage(result)
+            setDisplay(true)
           } else{
             setData(result)
             setIsEmpty(false)
+            setDisplay(false)
           }
         } catch (error) {
           setError(error)
@@ -43,7 +46,7 @@ export default function DocumentTable() {
     Select the file, create a new form data object, 
     use the form data object to send the file to the server for processing
     */
-    const uploadManifest = async (event)=>{
+    const uploadManifest = async (event) => {
         const file = event.target.files[0]
 
         if(!file) return 
@@ -62,11 +65,16 @@ export default function DocumentTable() {
             const response = await fetch("http://localhost:3000/api/v1/manifests/upload", fetchOptions)
 
             if(!response.ok){
-                const message = `An error has occured: ${response.status}`;
-                throw new Error(message);
+                const result = await response.json()
+                const errorMessage = result.message
+                setMessage(errorMessage)
+                setDisplay(true)
+            } else{
+                setMessage("")
+                fetchManifests()
+                setDisplay(false)
             }
-
-            fetchManifests()
+           
         }catch(error){
             setError(error)
         }     
@@ -117,19 +125,14 @@ export default function DocumentTable() {
     return (
         <>
          <>
-            {error && <Dialog open={true} 
-                    headerText="Error" 
-                    footer={
-                    <Button>Close</Button>
-                    }>
-                    {error.message}
-                    </Dialog>}
-            {!error && isEmpty ? (
-                <NoManifestDialog message={message} upload={uploadManifest}/>
-            ) : (
+            {error && <ManifestDialog display={display} message={message} upload={uploadManifest}/>}
+            {data.length === 0 && <ManifestDialog display={display} message={message} upload={uploadManifest}/>
+            } 
+            {data.length > 0 && !error && (
                 <>
+                    <ManifestDialog display={display} message={message} upload={uploadManifest}/>
                     <AnalyticalTable columns={tableColumns} data={data}/>
-                    <FileUploader hideInput>
+                    <FileUploader onChange={uploadManifest} hideInput>
                         <Button>Upload single file</Button>
                     </FileUploader>
                 </>
