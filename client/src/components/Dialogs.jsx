@@ -1,13 +1,14 @@
 import { Dialog, FileUploader, Button } from "@ui5/webcomponents-react"
 
 
-function NoManifestDialog({message, upload}){
+function ManifestDialog({display, message, upload}){
 
-
+    // Consider conditional renders of the dialog, e.g if you have an error dont include an upload button
     return(
         <>
-        <Dialog open={true} headerText={message}>
-            <FileUploader hideInput onChange={upload} >
+        <Dialog open={display} headerText="Message">
+            <FileUploader hideInput onChange={upload}>
+                {message}
             <Button>
                 Upload single file
             </Button>
@@ -17,4 +18,4 @@ function NoManifestDialog({message, upload}){
     )
 }
 
-export {NoManifestDialog}
+export {ManifestDialog}
