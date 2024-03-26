@@ -1,17 +1,29 @@
 import '@ui5/webcomponents-icons/dist/AllIcons.js';
 import { useEffect, useState } from 'react';
 import { AnalyticalTable, FlexBox, Button, FileUploader } from '@ui5/webcomponents-react';
-import { ManifestDialog } from './Dialogs';
+import { ItemsDialog, ManifestDialog } from './Dialogs';
 
 export default function DocumentTable() {
   const [data, setData] = useState([]);
   const [message, setMessage] = useState('');
   const [isEmpty, setIsEmpty] = useState(true);
   const [display, setDisplay] = useState(false);
+  const [isOpen, setIsOpen] = useState(false);
   const [error, setError] = useState(null);
 
+  // Change this to displayError and it's dependencies
   function displayDialog() {
     if (display === true) setDisplay(false);
+  }
+
+  function displayItems() {
+    if (isOpen === false) setIsOpen(true);
+  }
+
+  function closeItemDisplay() {
+    if (isOpen === true) {
+      setIsOpen(false);
+    }
   }
 
   // Add a loading modal to display as requests are being sent and processed by server
@@ -114,12 +126,18 @@ export default function DocumentTable() {
       Header: 'Actions',
       accessor: '.',
       headerTooltip: 'actions',
-      Cell: () => {
+      Cell: ({ row }) => {
+        const { UUID } = row.original;
+
+        function getUUID() {
+          console.log(UUID);
+        }
+
         return (
           <FlexBox>
             <Button icon="edit" />
             <Button icon="delete" />
-            <Button icon="activity-items" />
+            <Button icon="activity-items" onClick={displayItems} />
           </FlexBox>
         );
       },
@@ -150,6 +168,7 @@ export default function DocumentTable() {
     // When same file uploaded twice, it doesnt display the error until refresh
     <>
       <ManifestDialog display={display} setDisplay={displayDialog} message={message} upload={uploadManifest} />
+      <ItemsDialog isOpen={isOpen} setIsOpen={closeItemDisplay} />
       <AnalyticalTable columns={tableColumns} data={data} />
       <FileUploader onChange={uploadManifest} hideInput>
         <Button>Upload single file</Button>
