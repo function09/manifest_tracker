@@ -2,6 +2,7 @@ import '@ui5/webcomponents-icons/dist/AllIcons.js';
 import { useEffect, useState } from 'react';
 import { AnalyticalTable, FlexBox, Button, FileUploader } from '@ui5/webcomponents-react';
 import { ItemsDialog, ManifestDialog } from './Dialogs';
+import { fetchItems } from '../networkRequests/fetchRequests';
 
 export default function DocumentTable() {
   const [data, setData] = useState([]);
@@ -10,20 +11,23 @@ export default function DocumentTable() {
   const [display, setDisplay] = useState(false);
   const [isOpen, setIsOpen] = useState(false);
   const [error, setError] = useState(null);
+  const [UUID, setUUID] = useState(null);
+  const [docNumber, setDocNumber] = useState(null);
+  const [items, setItems] = useState([]);
 
   // Change this to displayError and it's dependencies
   function displayDialog() {
     if (display === true) setDisplay(false);
   }
 
-  function displayItems() {
-    if (isOpen === false) setIsOpen(true);
+  function displayItems(UUID) {
+    setUUID(UUID);
+    setIsOpen(true);
+    fetchItems(UUID, setDocNumber, setItems);
   }
 
   function closeItemDisplay() {
-    if (isOpen === true) {
-      setIsOpen(false);
-    }
+    setIsOpen(false);
   }
 
   // Add a loading modal to display as requests are being sent and processed by server
@@ -129,15 +133,15 @@ export default function DocumentTable() {
       Cell: ({ row }) => {
         const { UUID } = row.original;
 
-        function getUUID() {
-          console.log(UUID);
+        function handleDisplayItems(UUID) {
+          displayItems(UUID);
         }
 
         return (
           <FlexBox>
             <Button icon="edit" />
             <Button icon="delete" />
-            <Button icon="activity-items" onClick={displayItems} />
+            <Button icon="activity-items" onClick={() => handleDisplayItems(UUID)} />
           </FlexBox>
         );
       },
@@ -168,7 +172,7 @@ export default function DocumentTable() {
     // When same file uploaded twice, it doesnt display the error until refresh
     <>
       <ManifestDialog display={display} setDisplay={displayDialog} message={message} upload={uploadManifest} />
-      <ItemsDialog isOpen={isOpen} setIsOpen={closeItemDisplay} />
+      <ItemsDialog isOpen={isOpen} setIsOpen={closeItemDisplay} itemData={items} docNumber={docNumber} />
       <AnalyticalTable columns={tableColumns} data={data} />
       <FileUploader onChange={uploadManifest} hideInput>
         <Button>Upload single file</Button>

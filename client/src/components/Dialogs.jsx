@@ -11,10 +11,15 @@ function ManifestDialog({ display, setDisplay, message, upload }) {
   );
 }
 
-function ItemsDialog({ isOpen, setIsOpen }) {
+function ItemsDialog({ isOpen, setIsOpen, itemData, docNumber }) {
   return (
-    <Dialog open={isOpen} headerText="Items" footer={<Button onClick={setIsOpen}>Close</Button>}>
+    <Dialog
+      open={isOpen}
+      headerText={`Document Number: ${docNumber}`}
+      footer={<Button onClick={setIsOpen}>Close</Button>}
+    >
       <AnalyticalTable
+        data={itemData}
         columns={[
           {
             Header: 'Material_Batch',
