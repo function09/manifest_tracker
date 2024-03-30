@@ -1,8 +1,15 @@
 import '@ui5/webcomponents-icons/dist/AllIcons.js';
-import { useEffect, useState } from 'react';
-import { AnalyticalTable, FlexBox, Button, FileUploader } from '@ui5/webcomponents-react';
+import '@ui5/webcomponents/dist/features/InputElementsFormSupport.js';
+import { useEffect, useState, useRef } from 'react';
+import { AnalyticalTable, FlexBox, Button, FileUploader, Input } from '@ui5/webcomponents-react';
 import { ItemsDialog, ManifestDialog } from './Dialogs';
-import { fetchManifests, fetchItems, uploadManifest, deleteManifests } from '../networkRequests/fetchRequests';
+import {
+  fetchManifests,
+  fetchItems,
+  uploadManifest,
+  deleteManifests,
+  editMaterialDocument,
+} from '../networkRequests/fetchRequests';
 
 export default function DocumentTable() {
   const [data, setData] = useState([]);
@@ -14,10 +21,28 @@ export default function DocumentTable() {
   const [UUID, setUUID] = useState(null);
   const [docNumber, setDocNumber] = useState(null);
   const [items, setItems] = useState([]);
+  const [editingRowId, setEditingRowId] = useState(null);
+  const [editValue, setEditValue] = useState('');
+  const editValueRef = useRef('');
 
   // Change this to displayError and it's dependencies
   function displayDialog() {
     if (display === true) setDisplay(false);
+  }
+
+  function toggleEditMode(UUID, initialValue) {
+    setEditingRowId(UUID);
+    setUUID(UUID);
+    editValueRef.current = initialValue;
+  }
+
+  function handleInputChange(event) {
+    editValueRef.current = event.target.value;
+  }
+
+  function saveChanges() {
+    editMaterialDocument(UUID, editValueRef.current, setData, setMessage, setDisplay, setIsEmpty, setError);
+    setEditingRowId(null);
   }
 
   function displayItems(UUID) {
@@ -42,8 +67,17 @@ export default function DocumentTable() {
     },
     {
       Header: 'Material Document',
-      accessor: 'materialDocument',
+      accessor: 'materialDocNumber',
       headerTooltip: 'Material Document',
+      Cell: ({ row }) => {
+        const { UUID, materialDocNumber } = row.original;
+
+        return editingRowId === UUID ? (
+          <Input type="Text" name="materialDocNumber" value={editValue} onChange={handleInputChange} />
+        ) : (
+          <span>{materialDocNumber}</span>
+        );
+      },
     },
     {
       Header: 'Sending Warehouse',
@@ -65,7 +99,7 @@ export default function DocumentTable() {
       accessor: '.',
       headerTooltip: 'actions',
       Cell: ({ row }) => {
-        const { UUID } = row.original;
+        const { UUID, materialDocument } = row.original;
 
         function handleDisplayItems(UUID) {
           displayItems(UUID);
@@ -73,14 +107,20 @@ export default function DocumentTable() {
 
         return (
           <FlexBox>
-            <Button icon="edit" />
-            <Button
-              icon="delete"
-              onClick={() => {
-                deleteManifests(UUID, setData, setMessage, setDisplay, setIsEmpty, setError);
-              }}
-            />
-            <Button icon="activity-items" onClick={() => handleDisplayItems(UUID)} />
+            {editingRowId === UUID ? (
+              <Button icon="save" onClick={saveChanges} />
+            ) : (
+              <>
+                <Button icon="edit" onClick={() => toggleEditMode(UUID, materialDocument)} />
+                <Button
+                  icon="delete"
+                  onClick={() => {
+                    deleteManifests(UUID, setData, setMessage, setDisplay, setIsEmpty, setError);
+                  }}
+                />
+                <Button icon="activity-items" onClick={() => handleDisplayItems(UUID)} />
+              </>
+            )}
           </FlexBox>
         );
       },
