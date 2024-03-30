@@ -9,6 +9,7 @@ const fetchManifests = async (setData, setMessage, setDisplay, setIsEmpty, setEr
     }
 
     const manifests = await response.json();
+
     //   Fix the message that displays
     const result = manifests.message;
 
@@ -83,6 +84,30 @@ const uploadManifest = async (event, setMessage, setDisplay, setIsEmpty, setErro
   }
 };
 
+const editMaterialDocument = async (UUID, materialDocNumber, setData, setMessage, setDisplay, setIsEmpty, setError) => {
+  const fetchOptions = {
+    method: 'PUT',
+    headers: {
+      'Content-Type': 'application/json',
+    },
+    body: JSON.stringify({ materialDocNumber }),
+  };
+  try {
+    const response = await fetch(`http://localhost:3000/api/v1/manifests/update/${UUID}`, fetchOptions);
+
+    if (!response.ok) {
+      const result = await response.json();
+      const errorMessage = result.message;
+      console.log(errorMessage);
+    }
+
+    await fetchManifests(setData, setMessage, setDisplay, setIsEmpty, setError);
+    return response;
+  } catch (error) {
+    setError(error);
+  }
+};
+
 const deleteManifests = async (UUID, setData, setMessage, setDisplay, setIsEmpty, setError) => {
   const fetchOptions = { method: 'DELETE' };
   try {
@@ -93,4 +118,4 @@ const deleteManifests = async (UUID, setData, setMessage, setDisplay, setIsEmpty
     setError(error);
   }
 };
-export { fetchManifests, fetchItems, uploadManifest, deleteManifests };
+export { fetchManifests, fetchItems, uploadManifest, editMaterialDocument, deleteManifests };
