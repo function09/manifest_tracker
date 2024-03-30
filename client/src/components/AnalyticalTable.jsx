@@ -1,5 +1,4 @@
 import '@ui5/webcomponents-icons/dist/AllIcons.js';
-import '@ui5/webcomponents/dist/features/InputElementsFormSupport.js';
 import { useEffect, useState, useRef } from 'react';
 import { AnalyticalTable, FlexBox, Button, FileUploader, Input } from '@ui5/webcomponents-react';
 import { ItemsDialog, ManifestDialog } from './Dialogs';
@@ -73,7 +72,7 @@ export default function DocumentTable() {
         const { UUID, materialDocNumber } = row.original;
 
         return editingRowId === UUID ? (
-          <Input type="Text" name="materialDocNumber" value={editValue} onChange={handleInputChange} />
+          <Input type="Text" value={editValue} onChange={handleInputChange} />
         ) : (
           <span>{materialDocNumber}</span>
         );
