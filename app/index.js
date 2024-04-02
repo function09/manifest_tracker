@@ -2,6 +2,7 @@ import express from "express";
 import morgan from "morgan";
 import mongoose from "mongoose";
 import cors from "cors";
+import cookieParser from "cookie-parser";
 import manifests from "./routes/manifestRoutes.js";
 import users from "./routes/userRoutes.js";
 import "dotenv/config";
@@ -15,6 +16,7 @@ const corsOptions = {
 
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
+app.use(cookieParser());
 app.use(morgan("dev"));
 app.use(cors(corsOptions));
 
