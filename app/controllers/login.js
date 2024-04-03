@@ -18,10 +18,15 @@ const loginController = async (req, res) => {
       return res.status(401).json({ message: "Incorrect credentials." });
     }
 
-    // Can still use key after relogging - curious about this
     const token = jwt.sign({ user: req.body.username }, TOKEN_SECRET, { expiresIn: "8h" });
 
-    return res.status(200).json({ message: `User, ${user.username}, signed on successfully.`, token });
+    res
+      .cookie("JWT", token, {
+        httpOnly: true,
+        secure: false,
+      })
+      .status(200)
+      .json({ message: "Logged in successfully" });
   } catch (error) {
     return res.status(500).json({ error });
   }

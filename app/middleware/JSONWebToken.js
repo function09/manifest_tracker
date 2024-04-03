@@ -3,27 +3,18 @@ import "dotenv/config";
 
 const authenticateToken = (req, res, next) => {
   const { TOKEN_SECRET } = process.env;
-  const authHeader = req.headers.authorization;
 
-  if (!authHeader) {
-    return res.status(403).json({ message: "Authorization failed. No authorization header." });
+  const { token } = req.cookies;
+
+  if (!token) {
+    return res.status(403).json({ message: "No authorization token found" });
   }
-
-  const tokenParts = authHeader.split(" ");
-
-  if (tokenParts.length !== 2 || tokenParts[0].toLowerCase() !== "bearer") {
-    return res.status(401).json({ message: "Authorization failed. No access token." });
-  }
-
-  const token = tokenParts[1];
-
-  jwt.verify(token, TOKEN_SECRET, (error, decoded) => {
-    if (error) {
-      return next(error);
-    }
-    req.user = decoded.user;
+  try {
+    jwt.verify(token, TOKEN_SECRET);
     return next();
-  });
+  } catch (error) {
+    return res.status(403).json({ message: "Token verification failed:", error });
+  }
 };
 
 export default authenticateToken;
