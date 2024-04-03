@@ -10,15 +10,16 @@ import "dotenv/config";
 const app = express();
 
 const corsOptions = {
-  origin: "*",
+  origin: "http://localhost:5173",
+  credentials: true,
   optionsSuccessStatus: 200,
 };
 
+app.use(cors(corsOptions));
+app.use(cookieParser());
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
-app.use(cookieParser());
 app.use(morgan("dev"));
-app.use(cors(corsOptions));
 
 app.use("/api/v1/manifests", manifests);
 app.use("/users", users);
