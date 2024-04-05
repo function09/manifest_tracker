@@ -3,6 +3,7 @@ import morgan from "morgan";
 import mongoose from "mongoose";
 import cors from "cors";
 import cookieParser from "cookie-parser";
+import session from "express-session";
 import manifests from "./routes/manifestRoutes.js";
 import users from "./routes/userRoutes.js";
 import "dotenv/config";
@@ -17,6 +18,17 @@ const corsOptions = {
 
 app.use(cors(corsOptions));
 app.use(cookieParser());
+app.use(
+  session({
+    secret: process.env.SECRET,
+    saveUninitialized: false,
+    resave: false,
+    cookie: {
+      maxAge: 60000 * 60,
+      httpOnly: true,
+    },
+  })
+);
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 app.use(morgan("dev"));
