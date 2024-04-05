@@ -5,11 +5,14 @@ import "dotenv/config";
 const loginController = async (req, res) => {
   const { username, password } = req.body;
 
+  if (!username || !password) {
+    return res.status(401).json({ message: "Username and password are required. " });
+  }
+
   try {
     const user = await findUser(username);
-    const match = await bcrypt.compare(password, user.password);
 
-    if (!(await userExists(username)) || !match) {
+    if (!user || !(await bcrypt.compare(password, user.password))) {
       return res.status(422).json({ message: "Username or password is incorrect." });
     }
 
