@@ -1,22 +1,28 @@
 import bcrypt from "bcryptjs";
-import { findUser, userExists } from "../services/userDatabaseFunctions.js";
+import { findUser } from "../services/userDatabaseFunctions.js";
 import "dotenv/config";
 
 const loginController = async (req, res) => {
-  const { username, password } = req.body;
+  let { username, password } = req.body;
+  const authHeader = req.headers.authorization;
 
-  if (!username || !password) {
-    return res.status(401).json({ message: "Username and password are required. " });
+  if ((!username || !password) && !authHeader) {
+    return res.status(401).json({ message: "Username, password or authorization header are required. " });
+  }
+
+  if (authHeader) {
+    const credentials = Buffer.from(authHeader.split(" ")[1], "base64").toString().split(":");
+    [username, password] = credentials;
   }
 
   try {
     const user = await findUser(username);
 
     if (!user || !(await bcrypt.compare(password, user.password))) {
-      return res.status(422).json({ message: "Username or password is incorrect." });
+      return res.status(401).json({ message: "Username or password is incorrect." });
     }
 
-    req.session.userId = username;
+    req.session.userId = user.UUID;
 
     return res.status(200).json({ message: `User ${username} successfully logged in` });
   } catch (error) {
