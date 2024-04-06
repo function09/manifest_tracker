@@ -1,15 +1,15 @@
 import { createUser, userExists } from "../services/userDatabaseFunctions.js";
 
 const createUserController = async (req, res) => {
-  const { userName, password } = req.body;
+  const { username, password } = req.body;
   try {
-    const user = await userExists(userName);
+    const user = await userExists(username);
 
     if (user) {
       return res.status(409).json({ message: "username already exists" });
     }
 
-    await createUser(userName, password);
+    await createUser(username, password);
 
     return res.status(201).json({ message: "user account created successfully" });
   } catch (error) {
