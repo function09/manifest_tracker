@@ -63,6 +63,7 @@ const uploadManifest = async (event, setMessage, setDisplay, setIsEmpty, setErro
 
   const fetchOptions = {
     method: 'POST',
+    credentials: 'include',
     body: formData,
   };
 
@@ -74,6 +75,7 @@ const uploadManifest = async (event, setMessage, setDisplay, setIsEmpty, setErro
       const errorMessage = result.message;
       setMessage(errorMessage);
       setDisplay(true);
+      return;
     } else {
       setMessage('');
       await fetchManifests(setData, setMessage, setDisplay, setIsEmpty, setError);
@@ -118,4 +120,58 @@ const deleteManifests = async (UUID, setData, setMessage, setDisplay, setIsEmpty
     setError(error);
   }
 };
-export { fetchManifests, fetchItems, uploadManifest, editMaterialDocument, deleteManifests };
+
+const loginRequest = async (username, password) => {
+  const authHeader = 'Basic ' + btoa(username + ':' + password);
+
+  const fetchOptions = {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+      Authorization: authHeader,
+    },
+    credentials: 'include',
+  };
+
+  try {
+    const response = await fetch(`http://localhost:3000/users/login`, fetchOptions);
+
+    if (!response.ok) {
+      throw new Error('Error during logon');
+    }
+  } catch (error) {
+    console.log(error);
+  }
+
+  // After login, fetch all data to be displayed
+};
+
+const logOutRequest = async () => {
+  const fetchOptions = {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+    },
+    credentials: 'include',
+  };
+
+  try {
+    const response = await fetch('http://localhost:3000/users/logout', fetchOptions);
+
+    if (!response.ok) {
+      throw new Error('Error during logout');
+    }
+  } catch (error) {
+    console.log(error);
+  }
+};
+
+export {
+  fetchManifests,
+  fetchItems,
+  uploadManifest,
+  editMaterialDocument,
+  deleteManifests,
+  loginRequest,
+  logOutRequest,
+};
