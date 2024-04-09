@@ -1,7 +1,12 @@
 // Add a loading modal to display as requests are being sent and processed by server
-const fetchManifests = async (setData, setMessage, setDisplay, setIsEmpty, setError) => {
+const fetchManifests = async () => {
+  const fetchOptions = {
+    method: 'GET',
+    credentials: 'include',
+  };
+
   try {
-    const response = await fetch('http://localhost:3000/api/v1/manifests');
+    const response = await fetch('http://localhost:3000/api/v1/manifests', fetchOptions);
 
     if (!response.ok) {
       const message = `An error has occured: ${response.status}`;
@@ -11,19 +16,10 @@ const fetchManifests = async (setData, setMessage, setDisplay, setIsEmpty, setEr
     const manifests = await response.json();
 
     //   Fix the message that displays
-    const result = manifests.message;
-
-    if (typeof result === 'string') {
-      setData([]);
-      setMessage(result);
-      setDisplay(true);
-    } else {
-      setData(result);
-      setIsEmpty(false);
-      setDisplay(false);
-    }
+    const result = await manifests.message;
+    return result;
   } catch (error) {
-    setError(error);
+    console.log(error);
   }
 };
 
@@ -86,13 +82,14 @@ const uploadManifest = async (event, setMessage, setDisplay, setIsEmpty, setErro
   }
 };
 
-const editMaterialDocument = async (UUID, materialDocNumber, setData, setMessage, setDisplay, setIsEmpty, setError) => {
+const editMaterialDocument = async (UUID, materialDocNumber) => {
   const fetchOptions = {
     method: 'PUT',
     headers: {
       'Content-Type': 'application/json',
     },
     body: JSON.stringify({ materialDocNumber }),
+    credentials: 'include',
   };
   try {
     const response = await fetch(`http://localhost:3000/api/v1/manifests/update/${UUID}`, fetchOptions);
@@ -103,25 +100,34 @@ const editMaterialDocument = async (UUID, materialDocNumber, setData, setMessage
       console.log(errorMessage);
     }
 
-    await fetchManifests(setData, setMessage, setDisplay, setIsEmpty, setError);
+    await fetchManifests();
     return response;
   } catch (error) {
-    setError(error);
+    console.log(error);
   }
 };
 
-const deleteManifests = async (UUID, setData, setMessage, setDisplay, setIsEmpty, setError) => {
-  const fetchOptions = { method: 'DELETE' };
+const deleteManifests = async (UUID) => {
+  const fetchOptions = {
+    method: 'DELETE',
+    headers: {
+      'Content-Type': 'application/json',
+    },
+    credentials: 'include',
+  };
+
   try {
     const response = await fetch(`http://localhost:3000/api/v1/manifests/delete/${UUID}`, fetchOptions);
-    await fetchManifests(setData, setMessage, setDisplay, setIsEmpty, setError);
+    if (response.ok) {
+      await fetchManifests();
+    }
     return response;
   } catch (error) {
-    setError(error);
+    console.log(error);
   }
 };
 
-const loginRequest = async (username, password) => {
+const login = async (username, password) => {
   const authHeader = 'Basic ' + btoa(username + ':' + password);
 
   const fetchOptions = {
@@ -139,14 +145,16 @@ const loginRequest = async (username, password) => {
     if (!response.ok) {
       throw new Error('Error during logon');
     }
+    return true;
   } catch (error) {
     console.log(error);
+    return false;
   }
 
   // After login, fetch all data to be displayed
 };
 
-const logOutRequest = async () => {
+const logOut = async () => {
   const fetchOptions = {
     method: 'POST',
     headers: {
@@ -161,17 +169,10 @@ const logOutRequest = async () => {
     if (!response.ok) {
       throw new Error('Error during logout');
     }
+    return response.json();
   } catch (error) {
     console.log(error);
   }
 };
 
-export {
-  fetchManifests,
-  fetchItems,
-  uploadManifest,
-  editMaterialDocument,
-  deleteManifests,
-  loginRequest,
-  logOutRequest,
-};
+export { fetchManifests, fetchItems, uploadManifest, editMaterialDocument, deleteManifests, login, logOut };
