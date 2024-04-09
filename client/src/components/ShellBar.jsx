@@ -1,56 +1,63 @@
-import { Avatar, ShellBar } from '@ui5/webcomponents-react';
+import { Avatar, Menu, MenuItem, ShellBar } from '@ui5/webcomponents-react';
+import { useState } from 'react';
 import { LoginDialog } from './Dialogs';
-import { useState, useEffect } from 'react';
-import { fetchManifests, deleteManifests } from '../networkRequests/fetchRequests';
-import DocumentTable from './AnalyticalTable';
+import { logOut } from '../networkRequests/fetchRequests';
+import sapLogo from '../assets/SAP_2011_logo.svg';
 
-//Take this component and the analytical table, put them into their own shared component with shared state
 export default function DisplayShellBar() {
-  const [isOpen, setIsOpen] = useState(false);
-  const [data, setData] = useState([]);
+  const [menuIsOpen, setMenuIsOpen] = useState(false);
+  const [dialogIsOpen, setDialogIsOpen] = useState(false);
+  const [isLoggedIn, setIsLoggedIn] = useState(false);
 
-  async function fetchData() {
-    try {
-      const fetchedData = await fetchManifests();
-      setData(fetchedData);
-    } catch (error) {
-      console.error('Error fetching data:', error);
+  function displayMenu() {
+    setMenuIsOpen(true);
+  }
+
+  function closeMenu() {
+    setMenuIsOpen(false);
+  }
+
+  function displayDialog() {
+    setDialogIsOpen(true);
+  }
+
+  function CloseDialog() {
+    setDialogIsOpen(false);
+  }
+
+  function handleLogin() {
+    setIsLoggedIn(true);
+  }
+
+  async function handleLogOut() {
+    await logOut();
+    setIsLoggedIn(false);
+  }
+
+  function handleItemClick(event) {
+    const menuItemText = event.target.firstChild.text;
+
+    if (menuItemText === 'Log in') {
+      displayDialog();
     }
-  }
 
-  async function handleDelete(UUID) {
-    try {
-      const response = await deleteManifests(UUID);
-
-      if (response.ok) {
-        const updatedData = data.filter((item) => item.UUID !== UUID);
-        setData(updatedData);
-      }
-    } catch (error) {
-      console.log(error);
+    if (menuItemText === 'Log out') {
+      handleLogOut();
     }
-  }
-
-  function displayLoginDialog() {
-    setIsOpen(true);
-  }
-
-  async function closeLogin() {
-    setIsOpen(false);
-    await fetchData();
   }
 
   return (
     <>
-      <LoginDialog isOpen={isOpen} setIsOpen={closeLogin} />
       <ShellBar
-        // Download this image to use as a static file
-        logo={<img alt="SAP Logo" src="https://sap.github.io/ui5-webcomponents/assets/images/sap-logo-svg.svg" />}
+        onProfileClick={displayMenu}
+        logo={<img alt="SAP Logo" src={sapLogo} />}
         primaryTitle="Manifest Tracker"
-        profile={<Avatar icon="employee"></Avatar>}
-        onProfileClick={displayLoginDialog}
+        profile={<Avatar id={'openMenuBtn'} icon="employee"></Avatar>}
       ></ShellBar>
-      <DocumentTable data={data} onDelete={handleDelete} onUpdate={setData} />
+      <Menu opener={'openMenuBtn'} open={menuIsOpen} onItemClick={handleItemClick} onAfterClose={closeMenu}>
+        {isLoggedIn ? <MenuItem icon="log" text="Log out" /> : <MenuItem icon="visits" text="Log in" />}
+      </Menu>
+      <LoginDialog isOpen={dialogIsOpen} onClose={CloseDialog} onLogin={handleLogin} />
     </>
   );
 }

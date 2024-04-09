@@ -1,6 +1,6 @@
 import { Dialog, FileUploader, Button, AnalyticalTable, Form, FormItem, Input } from '@ui5/webcomponents-react';
 import { useState } from 'react';
-import { logOutRequest, loginRequest } from '../networkRequests/fetchRequests';
+import { login } from '../networkRequests/fetchRequests';
 
 function ManifestDialog({ display, setDisplay, message, upload }) {
   return (
@@ -44,18 +44,14 @@ function ItemsDialog({ isOpen, setIsOpen, itemData, docNumber }) {
   );
 }
 
-function LoginDialog({ isOpen, setIsOpen }) {
-  const [username, setUserName] = useState('');
+function LoginDialog({ isOpen, onClose, onLogin }) {
+  const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
 
-  function login() {
-    loginRequest(username, password);
-    setIsOpen(false);
-  }
-
-  function logout() {
-    logOutRequest();
-    setIsOpen(false);
+  async function handleLogin() {
+    await login(username, password);
+    onClose();
+    onLogin();
   }
 
   return (
@@ -63,16 +59,16 @@ function LoginDialog({ isOpen, setIsOpen }) {
       <Form>
         <FormItem label="Username">
           <Input
-            type="text"
+            type="Text"
             value={username}
             onChange={(event) => {
-              setUserName(event.target.value);
+              setUsername(event.target.value);
             }}
           />
         </FormItem>
         <FormItem label="Password">
           <Input
-            type="text"
+            type="Password"
             value={password}
             onChange={(event) => {
               setPassword(event.target.value);
@@ -80,8 +76,7 @@ function LoginDialog({ isOpen, setIsOpen }) {
           />
         </FormItem>
       </Form>
-      <Button onClick={login}>Login</Button>
-      <Button onClick={logout}>Logout</Button>
+      <Button onClick={handleLogin}>Log in</Button>
     </Dialog>
   );
 }
