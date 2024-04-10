@@ -1,6 +1,7 @@
 import { Dialog, FileUploader, Button, AnalyticalTable, Form, FormItem, Input } from '@ui5/webcomponents-react';
 import { useState } from 'react';
 import { login } from '../networkRequests/fetchRequests';
+import '@ui5/webcomponents/dist/features/InputElementsFormSupport.js';
 
 function ManifestDialog({ display, setDisplay, message, upload }) {
   return (
@@ -48,7 +49,8 @@ function LoginDialog({ isOpen, onClose, onLogin }) {
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
 
-  async function handleLogin() {
+  async function handleLogin(event) {
+    event.preventDefault();
     await login(username, password);
     onClose();
     onLogin();
@@ -56,7 +58,7 @@ function LoginDialog({ isOpen, onClose, onLogin }) {
 
   return (
     <Dialog open={isOpen} headerText="Login" /*Set a footer to include a sign-up feature*/>
-      <Form>
+      <Form onSubmit={handleLogin}>
         <FormItem label="Username">
           <Input
             type="Text"
@@ -75,8 +77,8 @@ function LoginDialog({ isOpen, onClose, onLogin }) {
             }}
           />
         </FormItem>
+        <Button type="Submit">Log in</Button>
       </Form>
-      <Button onClick={handleLogin}>Log in</Button>
     </Dialog>
   );
 }
