@@ -128,14 +128,12 @@ const deleteManifests = async (UUID) => {
 };
 
 const login = async (username, password) => {
-  const authHeader = 'Basic ' + btoa(username + ':' + password);
-
   const fetchOptions = {
     method: 'POST',
     headers: {
       'Content-Type': 'application/json',
-      Authorization: authHeader,
     },
+    body: JSON.stringify({ username, password }),
     credentials: 'include',
   };
 
@@ -143,15 +141,13 @@ const login = async (username, password) => {
     const response = await fetch(`http://localhost:3000/users/login`, fetchOptions);
 
     if (!response.ok) {
-      throw new Error('Error during logon');
+      const errorData = await response.json();
+      return errorData;
     }
-    return true;
+    return await response.json();
   } catch (error) {
     console.log(error);
-    return false;
   }
-
-  // After login, fetch all data to be displayed
 };
 
 const logOut = async () => {

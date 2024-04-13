@@ -7,7 +7,7 @@ import sapLogo from '../assets/SAP_2011_logo.svg';
 export default function DisplayShellBar() {
   const [menuIsOpen, setMenuIsOpen] = useState(false);
   const [dialogIsOpen, setDialogIsOpen] = useState(false);
-  const [isLoggedIn, setIsLoggedIn] = useState(false);
+  const [loginSession, setLoginSession] = useState(null);
 
   function displayMenu() {
     setMenuIsOpen(true);
@@ -21,17 +21,13 @@ export default function DisplayShellBar() {
     setDialogIsOpen(true);
   }
 
-  function CloseDialog() {
+  function closeDialog() {
     setDialogIsOpen(false);
   }
 
-  function handleLogin() {
-    setIsLoggedIn(true);
-  }
-
-  async function handleLogOut() {
+  async function setLogOut() {
     await logOut();
-    setIsLoggedIn(false);
+    setLoginSession(null);
   }
 
   function handleItemClick(event) {
@@ -42,7 +38,7 @@ export default function DisplayShellBar() {
     }
 
     if (menuItemText === 'Log out') {
-      handleLogOut();
+      setLogOut();
     }
   }
 
@@ -55,9 +51,9 @@ export default function DisplayShellBar() {
         profile={<Avatar id={'openMenuBtn'} icon="employee"></Avatar>}
       ></ShellBar>
       <Menu opener={'openMenuBtn'} open={menuIsOpen} onItemClick={handleItemClick} onAfterClose={closeMenu}>
-        {isLoggedIn ? <MenuItem icon="log" text="Log out" /> : <MenuItem icon="visits" text="Log in" />}
+        {loginSession ? <MenuItem icon="log" text="Log out" /> : <MenuItem icon="visits" text="Log in" />}
       </Menu>
-      <LoginDialog isOpen={dialogIsOpen} onClose={CloseDialog} onLogin={handleLogin} />
+      <LoginDialog isOpen={dialogIsOpen} onClose={closeDialog} onLogin={setLoginSession} />
     </>
   );
 }
