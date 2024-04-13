@@ -3,11 +3,12 @@ import { useState } from 'react';
 import { LoginDialog } from './Dialogs';
 import { logOut } from '../networkRequests/fetchRequests';
 import sapLogo from '../assets/SAP_2011_logo.svg';
+import { clearSessionFromStorage } from '../localStorage/localStorage';
 
-export default function DisplayShellBar() {
+export default function DisplayShellBar({ loginSession, setLoginSession }) {
   const [menuIsOpen, setMenuIsOpen] = useState(false);
   const [dialogIsOpen, setDialogIsOpen] = useState(false);
-  const [loginSession, setLoginSession] = useState(null);
+  // const [loginSession, setLoginSession] = useState(null);
 
   function displayMenu() {
     setMenuIsOpen(true);
@@ -27,6 +28,7 @@ export default function DisplayShellBar() {
 
   async function setLogOut() {
     await logOut();
+    clearSessionFromStorage();
     setLoginSession(null);
   }
 

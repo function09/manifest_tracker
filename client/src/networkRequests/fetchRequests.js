@@ -2,6 +2,9 @@
 const fetchManifests = async () => {
   const fetchOptions = {
     method: 'GET',
+    headers: {
+      'Content-Type': 'application/json',
+    },
     credentials: 'include',
   };
 
@@ -171,4 +174,37 @@ const logOut = async () => {
   }
 };
 
-export { fetchManifests, fetchItems, uploadManifest, editMaterialDocument, deleteManifests, login, logOut };
+const fetchCurrentSession = async () => {
+  const fetchOptions = {
+    method: 'GET',
+    headers: {
+      'Content-Type': 'application/json',
+    },
+    credentials: 'include',
+  };
+
+  try {
+    const response = await fetch('http://localhost:3000/users/session', fetchOptions);
+
+    if (!response.ok) {
+      return null;
+    }
+
+    const sessionData = await response.json();
+
+    return sessionData;
+  } catch (error) {
+    console.log(error);
+  }
+};
+
+export {
+  fetchManifests,
+  fetchItems,
+  uploadManifest,
+  editMaterialDocument,
+  deleteManifests,
+  login,
+  logOut,
+  fetchCurrentSession,
+};
