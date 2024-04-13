@@ -10,9 +10,10 @@ import {
   editMaterialDocument,
   login,
 } from '../networkRequests/fetchRequests';
+import FileUpload from './FileUpload';
 
-export default function DocumentTable({ loginSession }) {
-  const [data, setData] = useState([]);
+export default function DocumentTable({ data, setData, loginSession, handleFileUpload }) {
+  // const [data, setData] = useState([]);
   // const [message, setMessage] = useState('');
   // const [isEmpty, setIsEmpty] = useState(true);
   // const [display, setDisplay] = useState(false);
@@ -45,7 +46,6 @@ export default function DocumentTable({ loginSession }) {
 
   useEffect(() => {
     displayData();
-    console.log(data);
   }, [loginSession]);
 
   function toggleEditMode(UUID, initialValue) {
@@ -192,7 +192,13 @@ export default function DocumentTable({ loginSession }) {
     // When same file uploaded twice, it doesnt display the error until refresh
     <>
       {/* <ItemsDialog isOpen={isOpen} setIsOpen={closeItemDisplay} itemData={items} docNumber={docNumber} /> */}
-      {loginSession && <AnalyticalTable columns={tableColumns} data={data} />}
+      {loginSession && (
+        <>
+          <AnalyticalTable columns={tableColumns} data={data} />
+          <FileUpload handleFileUpload={handleFileUpload} />
+        </>
+      )}
+
       {/* <FileUploader
         onChange={(event) => uploadManifest(event, setMessage, setDisplay, setIsEmpty, setError, setData)}
         hideInput

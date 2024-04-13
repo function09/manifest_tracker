@@ -1,11 +1,22 @@
 import { useEffect, useState } from 'react';
 import DocumentTable from './components/AnalyticalTable';
 import DisplayShellBar from './components/ShellBar';
-import { fetchCurrentSession } from './networkRequests/fetchRequests';
+import { fetchCurrentSession, fetchManifests, uploadManifest } from './networkRequests/fetchRequests';
 import { saveSessionToStorage } from './localStorage/localStorage';
 
 export default function App() {
   const [loginSession, setLoginSession] = useState(null);
+  const [data, setData] = useState([]);
+
+  async function handleFileUpload(event) {
+    try {
+      await uploadManifest(event);
+      const updatedData = await fetchManifests();
+      setData(updatedData);
+    } catch (error) {
+      console.log(error);
+    }
+  }
 
   useEffect(() => {
     async function getCurrentSession() {
@@ -32,7 +43,7 @@ export default function App() {
   return (
     <>
       <DisplayShellBar loginSession={loginSession} setLoginSession={setLoginSession} />
-      <DocumentTable loginSession={loginSession} />
+      <DocumentTable data={data} setData={setData} loginSession={loginSession} handleFileUpload={handleFileUpload} />
     </>
   );
 }
