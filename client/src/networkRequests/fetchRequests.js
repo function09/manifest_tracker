@@ -16,11 +16,11 @@ const fetchManifests = async () => {
       throw new Error(message);
     }
 
-    const manifests = await response.json();
+    const result = await response.json();
+    const data = await result.data;
 
     //   Fix the message that displays
-    const result = await manifests.message;
-    return result;
+    return data;
   } catch (error) {
     console.log(error);
   }
@@ -45,7 +45,7 @@ const fetchItems = async (UUID, setDocumentNumber, setItems, setError) => {
   }
 };
 
-const uploadManifest = async (event, setMessage, setDisplay, setIsEmpty, setError, setData) => {
+const uploadManifest = async (event) => {
   /*
     Select the file, create a new form data object, 
     use the form data object to send the file to the server for processing
@@ -70,18 +70,13 @@ const uploadManifest = async (event, setMessage, setDisplay, setIsEmpty, setErro
     const response = await fetch('http://localhost:3000/api/v1/manifests/upload', fetchOptions);
 
     if (!response.ok) {
-      const result = await response.json();
-      const errorMessage = result.message;
-      setMessage(errorMessage);
-      setDisplay(true);
-      return;
-    } else {
-      setMessage('');
-      await fetchManifests(setData, setMessage, setDisplay, setIsEmpty, setError);
-      setDisplay(false);
+      console.log('error');
     }
+
+    const data = await response.json();
+    return data;
   } catch (error) {
-    setError(error);
+    console.log(error);
   }
 };
 
