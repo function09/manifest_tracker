@@ -13,6 +13,7 @@ import {
 import FileUpload from './FileUpload';
 
 export default function DocumentTable({ data, setData, loginSession, handleFileUpload }) {
+  // NEED TO HANDLE ERRORS ON ALL COMPONENTS, DISPLAY ITEM DATA,UPDATE, AND DELETE FUNCTIONS
   // const [data, setData] = useState([]);
   // const [message, setMessage] = useState('');
   // const [isEmpty, setIsEmpty] = useState(true);
@@ -48,11 +49,16 @@ export default function DocumentTable({ data, setData, loginSession, handleFileU
     displayData();
   }, [loginSession]);
 
-  function toggleEditMode(UUID, initialValue) {
+  function toggleEditMode(UUID) {
     setEditingRowId(UUID);
     setUUID(UUID);
-    editValueRef.current = initialValue;
   }
+
+  // function toggleEditMode(UUID, initialValue) {
+  //   setEditingRowId(UUID);
+  //   setUUID(UUID);
+  //   editValueRef.current = initialValue;
+  // }
 
   function handleInputChange(event) {
     editValueRef.current = event.target.value;
@@ -63,10 +69,17 @@ export default function DocumentTable({ data, setData, loginSession, handleFileU
   //   setEditingRowId(null);
   // }
 
+  // Handle validation errors
   async function saveChanges() {
-    // Update the material document number in the data array
+    // Make newtwork request to save changes to material doc number
     try {
-      await editMaterialDocument(UUID, editValueRef.current);
+      const response = await editMaterialDocument(UUID, editValueRef.current);
+
+      if (Response.status === 422) {
+        const errorData = await response.json();
+        console.log('Validation errors:', errorData.message);
+      }
+
       const newData = data.map((item) => {
         if (item.UUID === editingRowId) {
           return { ...item, materialDocNumber: editValueRef.current };
@@ -74,27 +87,19 @@ export default function DocumentTable({ data, setData, loginSession, handleFileU
         return item;
       });
 
-      // Update the state with the new data
-      onUpdate(newData);
+      // Update data array with modified data
+      setData(newData);
 
       // Reset editing state
       setEditingRowId(null);
     } catch (error) {
       console.log(error);
     }
-    // await editMaterialDocument(UUID, editValueRef.current);
-    // const newData = data.map((item) => {
-    //   if (item.UUID === editingRowId) {
-    //     return { ...item, materialDocNumber: editValueRef.current };
-    //   }
-    //   return item;
-    // });
+
+    // Update the data array with the new material doc number
 
     // // Update the state with the new data
     // onUpdate(newData);
-
-    // // Reset editing state
-    // setEditingRowId(null);
   }
 
   // function displayItems(UUID) {
@@ -121,10 +126,13 @@ export default function DocumentTable({ data, setData, loginSession, handleFileU
       Header: 'Material Document',
       accessor: 'materialDocNumber',
       headerTooltip: 'Material Document',
-      Cell: ({ row }) => {
-        const { UUID, materialDocNumber } = row.original;
+      Cell: (props) => {
+        const { original } = props.row;
+        const { UUID, materialDocNumber } = original;
 
-        return editingRowId === UUID ? (
+        const isEditing = editingRowId === UUID;
+
+        return isEditing ? (
           <Input type="Text" value={editValue} onChange={handleInputChange} />
         ) : (
           <span>{materialDocNumber}</span>
@@ -150,17 +158,17 @@ export default function DocumentTable({ data, setData, loginSession, handleFileU
       Header: 'Actions',
       accessor: '.',
       headerTooltip: 'actions',
-      Cell: ({ row }) => {
-        const { UUID, materialDocument } = row.original;
+      Cell: (props) => {
+        const { original } = props.row;
+        const { UUID } = original;
+        // console.log(original);
+        // function handleDisplayItems(UUID) {
+        //   displayItems(UUID);
+        // }
 
-        function handleDisplayItems(UUID) {
-          displayItems(UUID);
-        }
-
-        function handleDelete(UUID) {
-          onDelete(UUID);
-        }
-
+        // function handleDelete(UUID) {
+        //   onDelete(UUID);
+        // }
         return (
           <FlexBox>
             {editingRowId === UUID ? (
@@ -173,17 +181,35 @@ export default function DocumentTable({ data, setData, loginSession, handleFileU
                     toggleEditMode(UUID);
                   }}
                 />
-                <Button
-                  icon="delete"
-                  onClick={() => {
-                    handleDelete(UUID);
-                  }}
-                />
-                <Button icon="activity-items" onClick={() => handleDisplayItems(UUID)} />
+                <Button icon="delete" />
+                <Button icon="activity-items" />)
               </>
             )}
           </FlexBox>
         );
+        // return (
+        //   <FlexBox>
+        //     {editingRowId === UUID ? (
+        //       <Button icon="save" onClick={saveChanges} />
+        //     ) : (
+        //       <>
+        //         <Button
+        //           icon="edit"
+        //           onClick={() => {
+        //             toggleEditMode(UUID);
+        //           }}
+        //         />
+        //         <Button
+        //           icon="delete"
+        //           onClick={() => {
+        //             handleDelete(UUID);
+        //           }}
+        //         />
+        //         <Button icon="activity-items" onClick={() => handleDisplayItems(UUID)} />
+        //       </>
+        //     )}
+        //   </FlexBox>
+        // );
       },
     },
   ];
