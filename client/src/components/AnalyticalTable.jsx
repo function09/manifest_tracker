@@ -169,6 +169,18 @@ export default function DocumentTable({ data, setData, loginSession, handleFileU
         // function handleDelete(UUID) {
         //   onDelete(UUID);
         // }
+
+        async function handleDelete(UUID) {
+          try {
+            const response = await deleteManifests(UUID);
+
+            setData((prevData) => prevData.filter((item) => item.UUID !== UUID));
+            return response;
+          } catch (error) {
+            console.log('An error occurred:', error);
+          }
+        }
+
         return (
           <FlexBox>
             {editingRowId === UUID ? (
@@ -181,8 +193,13 @@ export default function DocumentTable({ data, setData, loginSession, handleFileU
                     toggleEditMode(UUID);
                   }}
                 />
-                <Button icon="delete" />
-                <Button icon="activity-items" />)
+                <Button
+                  icon="delete"
+                  onClick={() => {
+                    handleDelete(UUID);
+                  }}
+                />
+                <Button icon="activity-items" />
               </>
             )}
           </FlexBox>
