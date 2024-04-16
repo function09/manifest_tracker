@@ -15,14 +15,18 @@ function ManifestDialog({ display, setDisplay, message, upload }) {
   );
 }
 
-function ItemsDialog({ isOpen, setIsOpen, itemData }) {
+function ItemsDialog({ isOpen, setIsOpen, itemData, header }) {
   function closeItemDialog() {
     setIsOpen(false);
   }
 
   return (
-    <Dialog open={isOpen} footer={<Button onClick={closeItemDialog}>Close</Button>}>
-      <ItemsTable data={itemData} />
+    <Dialog
+      open={isOpen}
+      headerText={`Document Number: ${header}`}
+      footer={<Button onClick={closeItemDialog}>Close</Button>}
+    >
+      <ItemsTable data={itemData} header={header} />
     </Dialog>
   );
 }

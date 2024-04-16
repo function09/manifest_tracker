@@ -9,6 +9,7 @@ export default function App() {
   const [loginSession, setLoginSession] = useState(null);
   const [manifestData, setManifestData] = useState([]);
   const [isOpen, setIsOpen] = useState(false);
+  const [header, setHeader] = useState('');
   const [itemData, setItemData] = useState([]);
   const [UUID, setUUID] = useState(null);
 
@@ -61,6 +62,8 @@ export default function App() {
             openItemsDialog={openItemsDialog}
             setUUID={setUUID}
             setItemData={setItemData}
+            setHeader={setHeader}
+            header={header}
           />
           <ItemsDialog
             isOpen={isOpen}
@@ -68,6 +71,7 @@ export default function App() {
             UUID={UUID}
             setItemData={setItemData}
             itemData={itemData}
+            header={header}
           />
         </>
       )}

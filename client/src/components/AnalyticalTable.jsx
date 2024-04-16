@@ -13,6 +13,7 @@ export default function DocumentTable({
   openItemsDialog,
   setUUID,
   setItemData,
+  setHeader,
 }) {
   // NEED TO HANDLE ERRORS ON ALL COMPONENTS, DISPLAY ITEM DATA,UPDATE, AND DELETE FUNCTIONS
   const [editingRowId, setEditingRowId] = useState(null);
@@ -101,7 +102,12 @@ export default function DocumentTable({
               <>
                 <EditButton setEditingRowId={setEditingRowId} setUUID={setUUID} UUID={UUID} />
                 <DeleteButton UUID={UUID} setManifestData={setManifestData} />
-                <DisplayItemsButton UUID={UUID} openItemsDialog={openItemsDialog} setItemData={setItemData} />
+                <DisplayItemsButton
+                  UUID={UUID}
+                  openItemsDialog={openItemsDialog}
+                  setItemData={setItemData}
+                  setHeader={setHeader}
+                />
               </>
             )}
           </FlexBox>

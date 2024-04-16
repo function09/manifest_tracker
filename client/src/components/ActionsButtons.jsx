@@ -1,4 +1,3 @@
-import { useState } from 'react';
 import { Button } from '@ui5/webcomponents-react';
 import { fetchItems, editMaterialDocument, deleteManifests } from '../networkRequests/fetchRequests';
 
@@ -69,15 +68,17 @@ function DeleteButton({ UUID, setManifestData }) {
   );
 }
 
-function DisplayItemsButton({ UUID, openItemsDialog, setItemData }) {
+function DisplayItemsButton({ UUID, openItemsDialog, setItemData, setHeader }) {
   // Display the doc number as the header before finalizing
   async function displayItems(UUID) {
     openItemsDialog();
     try {
       const result = await fetchItems(UUID);
       const items = await result.data.items;
-      console.log(items);
+      const documentNumber = await result.data.documentNumber;
+
       setItemData(items);
+      setHeader(documentNumber);
     } catch (error) {
       console.log(error);
     }
