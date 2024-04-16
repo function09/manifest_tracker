@@ -26,10 +26,17 @@ const fetchManifests = async () => {
   }
 };
 
-const fetchItems = async (UUID, setDocumentNumber, setItems, setError) => {
+const fetchItems = async (UUID) => {
+  const fetchOptions = {
+    method: 'GET',
+    headers: {
+      'Content-Type': 'application/json',
+    },
+    credentials: 'include',
+  };
   // clean all of this up
   try {
-    const response = await fetch(`http://localhost:3000/api/v1/manifests/${UUID}`);
+    const response = await fetch(`http://localhost:3000/api/v1/manifests/${UUID}`, fetchOptions);
 
     if (!response.ok) {
       throw new Error('failed to fetch:', response.status);
@@ -37,11 +44,9 @@ const fetchItems = async (UUID, setDocumentNumber, setItems, setError) => {
 
     const data = await response.json();
     // Don't need anything but the document number,items, and UUID fix this in the API
-    const { documentNumber, items } = await data.message;
-    setDocumentNumber(documentNumber);
-    setItems(items);
+    return data;
   } catch (error) {
-    setError(error);
+    console.log(error);
   }
 };
 
@@ -80,6 +85,7 @@ const uploadManifest = async (event) => {
   }
 };
 
+//Change this to updateMaterialDocument
 const editMaterialDocument = async (UUID, materialDocNumber) => {
   const fetchOptions = {
     method: 'PUT',
@@ -95,10 +101,8 @@ const editMaterialDocument = async (UUID, materialDocNumber) => {
     if (!response.ok) {
       const result = await response.json();
       const errorMessage = result.message;
-      console.log(errorMessage);
+      console.log(result);
     }
-
-    await fetchManifests();
     return response;
   } catch (error) {
     console.log(error);
@@ -116,10 +120,14 @@ const deleteManifests = async (UUID) => {
 
   try {
     const response = await fetch(`http://localhost:3000/api/v1/manifests/delete/${UUID}`, fetchOptions);
-    if (response.ok) {
-      await fetchManifests();
+
+    if (!response.ok) {
+      console.log('Error occured:', response.status);
     }
-    return response;
+
+    const data = await response.json();
+    console.log(data);
+    return data;
   } catch (error) {
     console.log(error);
   }
