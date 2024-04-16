@@ -2,6 +2,7 @@ import { Dialog, FileUploader, Button, AnalyticalTable, Form, FormItem, Input } 
 import { useEffect, useState } from 'react';
 import { login } from '../networkRequests/fetchRequests';
 import '@ui5/webcomponents/dist/features/InputElementsFormSupport.js';
+import ItemsTable from './ItemsTable';
 
 function ManifestDialog({ display, setDisplay, message, upload }) {
   return (
@@ -14,33 +15,10 @@ function ManifestDialog({ display, setDisplay, message, upload }) {
   );
 }
 
-function ItemsDialog({ isOpen, setIsOpen, itemData, docNumber }) {
+function ItemsDialog({ isOpen, closeDialog, data }) {
   return (
-    <Dialog
-      open={isOpen}
-      headerText={`Document Number: ${docNumber}`}
-      footer={<Button onClick={setIsOpen}>Close</Button>}
-    >
-      <AnalyticalTable
-        data={itemData}
-        columns={[
-          {
-            Header: 'Material_Batch',
-            accessor: 'materialAndBatch',
-            headerTooltip: 'Material and batch ID',
-          },
-          {
-            Header: 'Description',
-            accessor: 'description',
-            headerTooltip: 'Item description',
-          },
-          {
-            Header: 'Quantity',
-            accessor: 'itemQuantity',
-            headerTooltip: 'Item quantity',
-          },
-        ]}
-      />
+    <Dialog open={isOpen} headerText="Test" footer={<Button onClick={closeDialog}>Close</Button>}>
+      <ItemsTable data={data} />
     </Dialog>
   );
 }
