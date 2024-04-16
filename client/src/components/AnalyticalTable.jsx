@@ -112,12 +112,8 @@ export default function DocumentTable({
 
   return (
     <>
-      {loginSession && (
-        <>
-          <AnalyticalTable columns={tableColumns} data={manifestData} />
-          <FileUpload handleFileUpload={handleFileUpload} />
-        </>
-      )}
+      <AnalyticalTable columns={tableColumns} data={manifestData} />
+      <FileUpload handleFileUpload={handleFileUpload} />
     </>
   );
 }

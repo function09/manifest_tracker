@@ -16,17 +16,6 @@ export default function App() {
     setIsOpen(true);
   }
 
-  // async function displayItems(UUID) {
-  //   openItemsDialog();
-  //   try {
-  //     const result = await fetchItems(UUID);
-  //     const items = await result.data.items;
-  //     setItemData(items);
-  //   } catch (error) {
-  //     console.log(error);
-  //   }
-  // }
-
   async function handleFileUpload(event) {
     try {
       await uploadManifest(event);
@@ -62,16 +51,26 @@ export default function App() {
   return (
     <>
       <DisplayShellBar loginSession={loginSession} setLoginSession={setLoginSession} />
-      <DocumentTable
-        manifestData={manifestData}
-        setManifestData={setManifestData}
-        loginSession={loginSession}
-        handleFileUpload={handleFileUpload}
-        openItemsDialog={openItemsDialog}
-        setUUID={setUUID}
-        setItemData={setItemData}
-      />
-      <ItemsDialog isOpen={isOpen} setIsOpen={setIsOpen} UUID={UUID} setItemData={setItemData} itemData={itemData} />
+      {loginSession && (
+        <>
+          <DocumentTable
+            manifestData={manifestData}
+            setManifestData={setManifestData}
+            loginSession={loginSession}
+            handleFileUpload={handleFileUpload}
+            openItemsDialog={openItemsDialog}
+            setUUID={setUUID}
+            setItemData={setItemData}
+          />
+          <ItemsDialog
+            isOpen={isOpen}
+            setIsOpen={setIsOpen}
+            UUID={UUID}
+            setItemData={setItemData}
+            itemData={itemData}
+          />
+        </>
+      )}
     </>
   );
 }
