@@ -1,8 +1,8 @@
-import { Dialog, FileUploader, Button, AnalyticalTable, Form, FormItem, Input } from '@ui5/webcomponents-react';
-import { useEffect, useState } from 'react';
+import ItemsTable from './ItemsTable';
+import { Dialog, FileUploader, Button, Form, FormItem, Input } from '@ui5/webcomponents-react';
+import { useState } from 'react';
 import { login } from '../networkRequests/fetchRequests';
 import '@ui5/webcomponents/dist/features/InputElementsFormSupport.js';
-import ItemsTable from './ItemsTable';
 
 function ManifestDialog({ display, setDisplay, message, upload }) {
   return (
@@ -15,10 +15,14 @@ function ManifestDialog({ display, setDisplay, message, upload }) {
   );
 }
 
-function ItemsDialog({ isOpen, closeDialog, data }) {
+function ItemsDialog({ isOpen, setIsOpen, itemData }) {
+  function closeItemDialog() {
+    setIsOpen(false);
+  }
+
   return (
-    <Dialog open={isOpen} headerText="Test" footer={<Button onClick={closeDialog}>Close</Button>}>
-      <ItemsTable data={data} />
+    <Dialog open={isOpen} footer={<Button onClick={closeItemDialog}>Close</Button>}>
+      <ItemsTable data={itemData} />
     </Dialog>
   );
 }

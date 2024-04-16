@@ -1,18 +1,37 @@
 import { useEffect, useState } from 'react';
 import DocumentTable from './components/AnalyticalTable';
 import DisplayShellBar from './components/ShellBar';
-import { fetchCurrentSession, fetchManifests, uploadManifest } from './networkRequests/fetchRequests';
+import { fetchCurrentSession, fetchManifests, uploadManifest, fetchItems } from './networkRequests/fetchRequests';
 import { saveSessionToStorage } from './localStorage/localStorage';
+import { ItemsDialog } from './components/Dialogs';
 
 export default function App() {
   const [loginSession, setLoginSession] = useState(null);
-  const [data, setData] = useState([]);
+  const [manifestData, setManifestData] = useState([]);
+  const [isOpen, setIsOpen] = useState(false);
+  const [itemData, setItemData] = useState([]);
+  const [UUID, setUUID] = useState(null);
+
+  function openItemsDialog() {
+    setIsOpen(true);
+  }
+
+  // async function displayItems(UUID) {
+  //   openItemsDialog();
+  //   try {
+  //     const result = await fetchItems(UUID);
+  //     const items = await result.data.items;
+  //     setItemData(items);
+  //   } catch (error) {
+  //     console.log(error);
+  //   }
+  // }
 
   async function handleFileUpload(event) {
     try {
       await uploadManifest(event);
       const updatedData = await fetchManifests();
-      setData(updatedData);
+      setManifestData(updatedData);
     } catch (error) {
       console.log(error);
     }
@@ -43,7 +62,16 @@ export default function App() {
   return (
     <>
       <DisplayShellBar loginSession={loginSession} setLoginSession={setLoginSession} />
-      <DocumentTable data={data} setData={setData} loginSession={loginSession} handleFileUpload={handleFileUpload} />
+      <DocumentTable
+        manifestData={manifestData}
+        setManifestData={setManifestData}
+        loginSession={loginSession}
+        handleFileUpload={handleFileUpload}
+        openItemsDialog={openItemsDialog}
+        setUUID={setUUID}
+        setItemData={setItemData}
+      />
+      <ItemsDialog isOpen={isOpen} setIsOpen={setIsOpen} UUID={UUID} setItemData={setItemData} itemData={itemData} />
     </>
   );
 }
