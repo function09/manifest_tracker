@@ -1,5 +1,4 @@
 import { FileUploader, Button } from '@ui5/webcomponents-react';
-import { uploadManifest } from '../networkRequests/fetchRequests';
 
 export default function FileUpload({ handleFileUpload }) {
   return (

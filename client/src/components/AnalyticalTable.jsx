@@ -9,11 +9,13 @@ export default function DocumentTable({
   manifestData,
   setManifestData,
   loginSession,
-  handleFileUpload,
   openItemsDialog,
   setUUID,
   setItemData,
   setHeader,
+  setErrorStatus,
+  setErrorMessage,
+  openErrorDialog,
 }) {
   // NEED TO HANDLE ERRORS ON ALL COMPONENTS, DISPLAY ITEM DATA,UPDATE, AND DELETE FUNCTIONS
   const [editingRowId, setEditingRowId] = useState(null);
@@ -97,6 +99,9 @@ export default function DocumentTable({
                 editingRowId={editingRowId}
                 setEditingRowId={setEditingRowId}
                 setManifestData={setManifestData}
+                setErrorStatus={setErrorStatus}
+                setErrorMessage={setErrorMessage}
+                openErrorDialog={openErrorDialog}
               />
             ) : (
               <>
@@ -119,7 +124,6 @@ export default function DocumentTable({
   return (
     <>
       <AnalyticalTable columns={tableColumns} data={manifestData} />
-      <FileUpload handleFileUpload={handleFileUpload} />
     </>
   );
 }

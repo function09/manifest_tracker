@@ -16,30 +16,41 @@ function EditButton({ setEditingRowId, setUUID, UUID }) {
   );
 }
 
-function SaveButton({ UUID, editValueRef, manifestData, editingRowId, setEditingRowId, setManifestData }) {
+function SaveButton({
+  UUID,
+  editValueRef,
+  manifestData,
+  editingRowId,
+  setEditingRowId,
+  setManifestData,
+  setErrorStatus,
+  setErrorMessage,
+  openErrorDialog,
+}) {
   // Handle validation errors
   async function saveChanges() {
     // Make newtwork request to save changes to material doc number
     try {
       const response = await editMaterialDocument(UUID, editValueRef.current);
 
-      if (Response.status === 422) {
-        const errorData = await response.json();
-        console.log('Validation errors:', errorData.message);
+      if (!response.success) {
+        setErrorStatus(response.status);
+        setErrorMessage(response.message);
+        openErrorDialog();
+      } else {
+        const newData = manifestData.map((item) => {
+          if (item.UUID === editingRowId) {
+            return { ...item, materialDocNumber: editValueRef.current };
+          }
+          return item;
+        });
+
+        // Update data array with modified data
+        setManifestData(newData);
+
+        // Reset editing state
+        setEditingRowId(null);
       }
-
-      const newData = manifestData.map((item) => {
-        if (item.UUID === editingRowId) {
-          return { ...item, materialDocNumber: editValueRef.current };
-        }
-        return item;
-      });
-
-      // Update data array with modified data
-      setManifestData(newData);
-
-      // Reset editing state
-      setEditingRowId(null);
     } catch (error) {
       console.log(error);
     }

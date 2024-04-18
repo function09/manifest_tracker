@@ -1,27 +1,43 @@
 import { useEffect, useState } from 'react';
 import DocumentTable from './components/AnalyticalTable';
 import DisplayShellBar from './components/ShellBar';
-import { fetchCurrentSession, fetchManifests, uploadManifest, fetchItems } from './networkRequests/fetchRequests';
+import { fetchCurrentSession, fetchManifests, uploadManifest } from './networkRequests/fetchRequests';
 import { saveSessionToStorage } from './localStorage/localStorage';
-import { ItemsDialog } from './components/Dialogs';
+import { ErrorDialog, ItemsDialog } from './components/Dialogs';
+import FileUpload from './components/FileUpload';
 
 export default function App() {
   const [loginSession, setLoginSession] = useState(null);
   const [manifestData, setManifestData] = useState([]);
-  const [isOpen, setIsOpen] = useState(false);
   const [header, setHeader] = useState('');
   const [itemData, setItemData] = useState([]);
   const [UUID, setUUID] = useState(null);
+  const [itemDisplayOpen, setItemDisplayOpen] = useState(false);
+  const [errorDialogOpen, setErrorDialogOpen] = useState(false);
+  // See if this can be combined into another state
+  const [errorStatus, setErrorStatus] = useState('');
+  const [errorMessage, setErrorMessage] = useState();
 
   function openItemsDialog() {
-    setIsOpen(true);
+    setItemDisplayOpen(true);
+  }
+
+  function openErrorDialog() {
+    setErrorDialogOpen(true);
   }
 
   async function handleFileUpload(event) {
     try {
-      await uploadManifest(event);
-      const updatedData = await fetchManifests();
-      setManifestData(updatedData);
+      const uploadedResult = await uploadManifest(event);
+
+      if (!uploadedResult.success) {
+        setErrorStatus(uploadedResult.status);
+        setErrorMessage(uploadedResult.message);
+        openErrorDialog();
+      } else {
+        const updatedData = await fetchManifests();
+        setManifestData(updatedData);
+      }
     } catch (error) {
       console.log(error);
     }
@@ -64,14 +80,24 @@ export default function App() {
             setItemData={setItemData}
             setHeader={setHeader}
             header={header}
+            setErrorStatus={setErrorStatus}
+            setErrorMessage={setErrorMessage}
+            openErrorDialog={openErrorDialog}
           />
           <ItemsDialog
-            isOpen={isOpen}
-            setIsOpen={setIsOpen}
+            isOpen={itemDisplayOpen}
+            setIsOpen={setItemDisplayOpen}
             UUID={UUID}
             setItemData={setItemData}
             itemData={itemData}
             header={header}
+          />
+          <FileUpload handleFileUpload={handleFileUpload} />
+          <ErrorDialog
+            errorMessage={errorMessage}
+            errorStatus={errorStatus}
+            errorDialogOpen={errorDialogOpen}
+            setErrorDialogOpen={setErrorDialogOpen}
           />
         </>
       )}

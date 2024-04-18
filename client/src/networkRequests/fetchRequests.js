@@ -1,4 +1,5 @@
 // Add a loading modal to display as requests are being sent and processed by server
+//Also try to break these down and prevent repetition
 const fetchManifests = async () => {
   const fetchOptions = {
     method: 'GET',
@@ -58,7 +59,9 @@ const uploadManifest = async (event) => {
 
   const file = event.target.files[0];
 
-  if (!file) return;
+  if (!file) {
+    return;
+  }
 
   const formData = new FormData();
 
@@ -73,15 +76,17 @@ const uploadManifest = async (event) => {
 
   try {
     const response = await fetch('http://localhost:3000/api/v1/manifests/upload', fetchOptions);
+    const data = await response.json();
 
     if (!response.ok) {
-      console.log('error');
+      event.target.value = '';
+      return { success: false, status: response.status, message: data.message };
+    } else {
+      event.target.value = '';
+      return { success: true, message: data.message };
     }
-
-    const data = await response.json();
-    return data;
   } catch (error) {
-    console.log(error);
+    return { success: false, status: error.status, message: error.statusText };
   }
 };
 
@@ -97,15 +102,17 @@ const editMaterialDocument = async (UUID, materialDocNumber) => {
   };
   try {
     const response = await fetch(`http://localhost:3000/api/v1/manifests/update/${UUID}`, fetchOptions);
-
+    const result = await response.json();
+    console.log(result.message);
     if (!response.ok) {
-      const result = await response.json();
-      const errorMessage = result.message;
-      console.log(result);
+      const errorMessages = Array.isArray(result.message)
+        ? result.message.map((message) => message.msg)
+        : [result.message];
+      return { success: false, status: response.status, message: await errorMessages };
     }
-    return response;
+    return { success: true, data: result };
   } catch (error) {
-    console.log(error);
+    return { success: false, status: error.status, message: error.statusText };
   }
 };
 
