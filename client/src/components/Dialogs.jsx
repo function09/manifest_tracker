@@ -1,16 +1,29 @@
 import ItemsTable from './ItemsTable';
-import { Dialog, FileUploader, Button, Form, FormItem, Input } from '@ui5/webcomponents-react';
+import { Dialog, Button, Form, FormItem, Input, List, Text, StandardListItem } from '@ui5/webcomponents-react';
 import { useState } from 'react';
 import { login } from '../networkRequests/fetchRequests';
 import '@ui5/webcomponents/dist/features/InputElementsFormSupport.js';
 
-function ManifestDialog({ display, setDisplay, message, upload }) {
+function ErrorDialog({ errorMessage, errorStatus, errorDialogOpen, setErrorDialogOpen }) {
+  function closeErrorDialog() {
+    setErrorDialogOpen(false);
+  }
   return (
-    //Display this as a banner as opposed to a dialog
-    <Dialog open={display} headerText="Message" footer={<Button onClick={setDisplay}>Close</Button>}>
-      <FileUploader hideInput onChange={upload}>
-        {message}
-      </FileUploader>
+    <Dialog
+      open={errorDialogOpen}
+      headerText={`Error: ${errorStatus}`}
+      footer={<Button onClick={closeErrorDialog}>Close</Button>}
+    >
+      <List>
+        {errorMessage && Array.isArray(errorMessage) ? (
+          errorMessage.map((error, index) => <StandardListItem key={index}>{error}</StandardListItem>)
+        ) : (
+          <StandardListItem>
+            {typeof errorMessage === 'string' ? errorMessage : 'An unknown error occurred.'}
+          </StandardListItem>
+        )}
+      </List>
+      {/* {errorMessage} */}
     </Dialog>
   );
 }
@@ -85,4 +98,4 @@ function LoginDialog({ isOpen, onClose, onLogin }) {
   );
 }
 
-export { ManifestDialog, ItemsDialog, LoginDialog };
+export { ErrorDialog, ItemsDialog, LoginDialog };
