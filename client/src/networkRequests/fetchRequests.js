@@ -1,5 +1,6 @@
 // Add a loading modal to display as requests are being sent and processed by server
 //Also try to break these down and prevent repetition
+//Clean these up as well so they're consistent
 const fetchManifests = async () => {
   const fetchOptions = {
     method: 'GET',
@@ -11,19 +12,15 @@ const fetchManifests = async () => {
 
   try {
     const response = await fetch('http://localhost:3000/api/v1/manifests', fetchOptions);
+    const result = await response.json();
 
     if (!response.ok) {
-      const message = `An error has occured: ${response.status}`;
-      throw new Error(message);
+      return { success: false, status: response.status, data: result.message };
+    } else {
+      return { success: true, status: response.status, data: result.data };
     }
-
-    const result = await response.json();
-    const data = await result.data;
-
-    //   Fix the message that displays
-    return data;
   } catch (error) {
-    console.log(error);
+    throw new Error('Failed to connect to the server:', error.message);
   }
 };
 
@@ -38,16 +35,16 @@ const fetchItems = async (UUID) => {
   // clean all of this up
   try {
     const response = await fetch(`http://localhost:3000/api/v1/manifests/${UUID}`, fetchOptions);
+    const result = await response.json();
 
     if (!response.ok) {
-      throw new Error('failed to fetch:', response.status);
+      return { success: false, status: response.status, message: result.message };
+    } else {
+      // Don't need anything but the document number,items, and UUID fix this in the API
+      return { success: true, status: response.status, data: result.data };
     }
-
-    const data = await response.json();
-    // Don't need anything but the document number,items, and UUID fix this in the API
-    return data;
   } catch (error) {
-    console.log(error);
+    throw new Error('Failed to connect to the server:', error.message);
   }
 };
 
@@ -86,7 +83,7 @@ const uploadManifest = async (event) => {
       return { success: true, message: data.message };
     }
   } catch (error) {
-    return { success: false, status: error.status, message: error.statusText };
+    throw new Error('Failed to connect to the server:', error.message);
   }
 };
 
@@ -112,7 +109,7 @@ const editMaterialDocument = async (UUID, materialDocNumber) => {
     }
     return { success: true, data: result };
   } catch (error) {
-    return { success: false, status: error.status, message: error.statusText };
+    throw new Error('Failed to connect to the server:', error.message);
   }
 };
 
@@ -127,16 +124,15 @@ const deleteManifests = async (UUID) => {
 
   try {
     const response = await fetch(`http://localhost:3000/api/v1/manifests/delete/${UUID}`, fetchOptions);
+    const data = await response.json();
 
     if (!response.ok) {
-      console.log('Error occured:', response.status);
+      return { success: false, status: response.status, message: data.message };
+    } else {
+      return { success: true, status: response.status, message: data.message };
     }
-
-    const data = await response.json();
-    console.log(data);
-    return data;
   } catch (error) {
-    console.log(error);
+    throw new Error('Failed to connect to the server:', error.message);
   }
 };
 
@@ -152,14 +148,16 @@ const login = async (username, password) => {
 
   try {
     const response = await fetch(`http://localhost:3000/users/login`, fetchOptions);
+    const result = await response.json();
 
     if (!response.ok) {
-      const errorData = await response.json();
-      return errorData;
+      return { success: false, status: response.status, message: result.message };
+    } else {
+      //Need to fix endpoint structure
+      return { success: true, status: response.status, message: result.username };
     }
-    return await response.json();
   } catch (error) {
-    console.log(error);
+    throw new Error('Failed to connect to the server:', error.message);
   }
 };
 
@@ -174,13 +172,15 @@ const logOut = async () => {
 
   try {
     const response = await fetch('http://localhost:3000/users/logout', fetchOptions);
+    const result = await response.json();
 
     if (!response.ok) {
-      throw new Error('Error during logout');
+      return { success: false, status: response.status, message: result.message };
+    } else {
+      return { success: true, status: response.status, message: result.message };
     }
-    return response.json();
   } catch (error) {
-    console.log(error);
+    throw new Error('Failed to connect to the server:', error.message);
   }
 };
 
@@ -204,7 +204,7 @@ const fetchCurrentSession = async () => {
 
     return sessionData;
   } catch (error) {
-    console.log(error);
+    throw new Error('Failed to connect to the server:', error.message);
   }
 };
 

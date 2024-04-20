@@ -1,13 +1,22 @@
 import { Avatar, Menu, MenuItem, ShellBar } from '@ui5/webcomponents-react';
 import { useState } from 'react';
-import { LoginDialog } from './Dialogs';
+import { LogOutDialog, LoginDialog } from './Dialogs';
 import { logOut } from '../networkRequests/fetchRequests';
 import sapLogo from '../assets/SAP_2011_logo.svg';
 import { clearSessionFromStorage } from '../localStorage/localStorage';
 
-export default function DisplayShellBar({ loginSession, setLoginSession }) {
+export default function DisplayShellBar({
+  loginSession,
+  setLoginSession,
+  setErrorStatus,
+  setErrorMessage,
+  errorMessage,
+  openErrorDialog,
+}) {
   const [menuIsOpen, setMenuIsOpen] = useState(false);
   const [dialogIsOpen, setDialogIsOpen] = useState(false);
+  const [logOutDialogOpen, setLogoutDialogOpen] = useState(false);
+  const [logoutMessage, setLogOutMessage] = useState('');
   // const [loginSession, setLoginSession] = useState(null);
 
   function displayMenu() {
@@ -17,7 +26,7 @@ export default function DisplayShellBar({ loginSession, setLoginSession }) {
   function closeMenu() {
     setMenuIsOpen(false);
   }
-
+  // differentiate this from the error dialog
   function displayDialog() {
     setDialogIsOpen(true);
   }
@@ -26,10 +35,34 @@ export default function DisplayShellBar({ loginSession, setLoginSession }) {
     setDialogIsOpen(false);
   }
 
+  function displayLogoutDialog() {
+    setLogoutDialogOpen(true);
+  }
+
+  function closeLogoutDialog() {
+    setLogoutDialogOpen(false);
+  }
+
   async function setLogOut() {
-    await logOut();
-    clearSessionFromStorage();
-    setLoginSession(null);
+    try {
+      const handleLogout = await logOut();
+
+      if (!handleLogout.success) {
+        setErrorStatus(handleLogout.status);
+        setErrorMessage(handleLogout.message);
+        openErrorDialog();
+      } else {
+        setErrorMessage('');
+        clearSessionFromStorage();
+        setLoginSession(null);
+        setLogOutMessage(handleLogout.message);
+        displayLogoutDialog();
+      }
+    } catch (error) {
+      setErrorStatus(500);
+      setErrorMessage(error);
+      openErrorDialog();
+    }
   }
 
   function handleItemClick(event) {
@@ -55,7 +88,14 @@ export default function DisplayShellBar({ loginSession, setLoginSession }) {
       <Menu opener={'openMenuBtn'} open={menuIsOpen} onItemClick={handleItemClick} onAfterClose={closeMenu}>
         {loginSession ? <MenuItem icon="log" text="Log out" /> : <MenuItem icon="visits" text="Log in" />}
       </Menu>
-      <LoginDialog isOpen={dialogIsOpen} onClose={closeDialog} onLogin={setLoginSession} />
+      <LoginDialog
+        isOpen={dialogIsOpen}
+        onClose={closeDialog}
+        onLogin={setLoginSession}
+        setErrorMessage={setErrorMessage}
+        errorMessage={errorMessage}
+      />
+      <LogOutDialog isOpen={logOutDialogOpen} logOutMessage={logoutMessage} handleClose={closeLogoutDialog} />
     </>
   );
 }

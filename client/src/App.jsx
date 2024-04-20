@@ -36,10 +36,11 @@ export default function App() {
         openErrorDialog();
       } else {
         const updatedData = await fetchManifests();
-        setManifestData(updatedData);
+        setManifestData(updatedData.data);
       }
     } catch (error) {
-      console.log(error);
+      setErrorMessage(error.message);
+      openErrorDialog();
     }
   }
 
@@ -56,7 +57,6 @@ export default function App() {
           saveSessionToStorage(null);
         }
       } catch (error) {
-        console.log(error);
         setLoginSession(null);
         saveSessionToStorage(null);
       }
@@ -67,7 +67,14 @@ export default function App() {
 
   return (
     <>
-      <DisplayShellBar loginSession={loginSession} setLoginSession={setLoginSession} />
+      <DisplayShellBar
+        loginSession={loginSession}
+        setLoginSession={setLoginSession}
+        setErrorStatus={setErrorStatus}
+        setErrorMessage={setErrorMessage}
+        errorMessage={errorMessage}
+        openErrorDialog={openErrorDialog}
+      />
       {loginSession && (
         <>
           <DocumentTable

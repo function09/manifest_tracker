@@ -44,10 +44,9 @@ function ItemsDialog({ isOpen, setIsOpen, itemData, header }) {
   );
 }
 
-function LoginDialog({ isOpen, onClose, onLogin }) {
+function LoginDialog({ isOpen, onClose, onLogin, setErrorMessage, errorMessage }) {
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
-  const [error, setError] = useState(null);
 
   async function handleLogin(event) {
     event.preventDefault();
@@ -55,16 +54,17 @@ function LoginDialog({ isOpen, onClose, onLogin }) {
     try {
       const data = await login(username, password);
 
-      if (!data.username) {
-        setError(data.message);
+      if (!data.success) {
+        setErrorMessage(data.message);
       } else {
+        setErrorMessage('');
         onClose();
-        onLogin(data.username);
+        onLogin(data.message);
         setUsername('');
         setPassword('');
       }
     } catch (error) {
-      setError(error);
+      setErrorMessage('Failed to connect to the server');
     }
   }
 
@@ -73,6 +73,7 @@ function LoginDialog({ isOpen, onClose, onLogin }) {
       open={isOpen}
       headerText="Login" /*Set a footer to include a sign-up feature THERE IS A BUG WHERE IF ESCAPE IS PRESSED THE DIALOG STATE DOES NOT CHANGE*/
     >
+      {errorMessage && <Text style={{ color: 'red' }}>{errorMessage}</Text>}
       <Form onSubmit={handleLogin}>
         <FormItem label="Username">
           <Input
@@ -98,4 +99,11 @@ function LoginDialog({ isOpen, onClose, onLogin }) {
   );
 }
 
-export { ErrorDialog, ItemsDialog, LoginDialog };
+function LogOutDialog({ isOpen, logOutMessage, handleClose }) {
+  return (
+    <Dialog headerText="Log out" open={isOpen} footer={<Button onClick={handleClose}>Close</Button>}>
+      <Text>{logOutMessage}</Text>
+    </Dialog>
+  );
+}
+export { ErrorDialog, ItemsDialog, LoginDialog, LogOutDialog };

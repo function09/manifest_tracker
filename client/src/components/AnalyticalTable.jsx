@@ -24,12 +24,21 @@ export default function DocumentTable({
 
   async function displayData() {
     try {
-      if (loginSession) {
-        const data = await fetchManifests();
-        setManifestData(data);
-      } else {
-        setManifestData([]);
+      const fetchData = await fetchManifests();
+
+      if (!fetchData.success) {
+        setErrorStatus(fetchData.status);
+        setErrorMessage(fetchData.message);
+        openErrorDialog();
       }
+
+      if (loginSession) {
+        setManifestData(fetchData.data);
+      }
+
+      // } catch (error) {
+      //   console.log(error);
+      // }
     } catch (error) {
       console.log(error);
     }
@@ -106,12 +115,21 @@ export default function DocumentTable({
             ) : (
               <>
                 <EditButton setEditingRowId={setEditingRowId} setUUID={setUUID} UUID={UUID} />
-                <DeleteButton UUID={UUID} setManifestData={setManifestData} />
+                <DeleteButton
+                  UUID={UUID}
+                  setManifestData={setManifestData}
+                  setErrorStatus={setErrorStatus}
+                  setErrorMessage={setErrorMessage}
+                  openErrorDialog={openErrorDialog}
+                />
                 <DisplayItemsButton
                   UUID={UUID}
                   openItemsDialog={openItemsDialog}
                   setItemData={setItemData}
                   setHeader={setHeader}
+                  setErrorStatus={setErrorStatus}
+                  setErrorMessage={setErrorMessage}
+                  openErrorDialog={openErrorDialog}
                 />
               </>
             )}

@@ -9,6 +9,7 @@ function EditButton({ setEditingRowId, setUUID, UUID }) {
   return (
     <Button
       icon="edit"
+      tooltip="Edit material document"
       onClick={() => {
         toggleEditMode(UUID);
       }}
@@ -58,13 +59,18 @@ function SaveButton({
   return <Button icon="save" onClick={saveChanges} />;
 }
 
-function DeleteButton({ UUID, setManifestData }) {
+function DeleteButton({ UUID, setManifestData, setErrorStatus, setErrorMessage, openErrorDialog }) {
   async function handleDelete(UUID) {
     try {
       const response = await deleteManifests(UUID);
-
-      setManifestData((prevData) => prevData.filter((item) => item.UUID !== UUID));
-      return response;
+      if (!response.success) {
+        setErrorStatus(response.status);
+        setErrorMessage(response.message);
+        openErrorDialog();
+      } else {
+        setManifestData((prevData) => prevData.filter((item) => item.UUID !== UUID));
+        return response;
+      }
     } catch (error) {
       console.log('An error occurred:', error);
     }
@@ -72,6 +78,7 @@ function DeleteButton({ UUID, setManifestData }) {
   return (
     <Button
       icon="delete"
+      tooltip="Delete document"
       onClick={() => {
         handleDelete(UUID);
       }}
@@ -79,7 +86,15 @@ function DeleteButton({ UUID, setManifestData }) {
   );
 }
 
-function DisplayItemsButton({ UUID, openItemsDialog, setItemData, setHeader }) {
+function DisplayItemsButton({
+  UUID,
+  openItemsDialog,
+  setItemData,
+  setHeader,
+  setErrorStatus,
+  setErrorMessage,
+  openErrorDialog,
+}) {
   // Display the doc number as the header before finalizing
   async function displayItems(UUID) {
     openItemsDialog();
@@ -88,16 +103,25 @@ function DisplayItemsButton({ UUID, openItemsDialog, setItemData, setHeader }) {
       const items = await result.data.items;
       const documentNumber = await result.data.documentNumber;
 
-      setItemData(items);
-      setHeader(documentNumber);
+      if (!result.success) {
+        console.log('error here');
+        setErrorStatus(result.status);
+        setErrorMessage(result.message);
+        openErrorDialog();
+      } else {
+        setItemData(items);
+        setHeader(documentNumber);
+      }
     } catch (error) {
-      console.log(error);
+      setErrorMessage(error.message);
+      openErrorDialog();
     }
   }
 
   return (
     <Button
       icon="activity-items"
+      tooltip="View items"
       onClick={() => {
         displayItems(UUID);
       }}
