@@ -11,9 +11,12 @@ dependencies:
   '@ui5/webcomponents-fiori':
     specifier: ^1.23.1
     version: 1.23.1
+  '@ui5/webcomponents-icons':
+    specifier: ^1.23.1
+    version: 1.23.1
   '@ui5/webcomponents-react':
     specifier: ^1.26.0
-    version: 1.26.0(@types/react-dom@18.2.22)(@types/react@18.2.66)(@ui5/webcomponents-fiori@1.23.1)(@ui5/webcomponents@1.23.1)(react-dom@18.2.0)(react@18.2.0)
+    version: 1.26.0(@types/react-dom@18.2.22)(@types/react@18.2.66)(@ui5/webcomponents-fiori@1.23.1)(@ui5/webcomponents-icons@1.23.1)(@ui5/webcomponents@1.23.1)(react-dom@18.2.0)(react@18.2.0)
   react:
     specifier: ^18.2.0
     version: 18.2.0
@@ -875,7 +878,7 @@ packages:
       react: 18.2.0
     dev: false
 
-  /@ui5/webcomponents-react@1.26.0(@types/react-dom@18.2.22)(@types/react@18.2.66)(@ui5/webcomponents-fiori@1.23.1)(@ui5/webcomponents@1.23.1)(react-dom@18.2.0)(react@18.2.0):
+  /@ui5/webcomponents-react@1.26.0(@types/react-dom@18.2.22)(@types/react@18.2.66)(@ui5/webcomponents-fiori@1.23.1)(@ui5/webcomponents-icons@1.23.1)(@ui5/webcomponents@1.23.1)(react-dom@18.2.0)(react@18.2.0):
     resolution: {integrity: sha512-ORACXZ9tDF4yofZwO4/geusqniCdzWVld/A7/Q4pRwDhjLi82vluQhDVf5CVs0ky9B4SOQCfjowAdvCacqXZyQ==}
     peerDependencies:
       '@types/react': '*'
@@ -901,6 +904,7 @@ packages:
       '@types/react-dom': 18.2.22
       '@ui5/webcomponents': 1.23.1
       '@ui5/webcomponents-fiori': 1.23.1
+      '@ui5/webcomponents-icons': 1.23.1
       '@ui5/webcomponents-react-base': 1.26.0(@types/react@18.2.66)(react@18.2.0)
       clsx: 2.1.0
       react: 18.2.0
