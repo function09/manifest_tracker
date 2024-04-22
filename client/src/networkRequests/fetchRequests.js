@@ -50,7 +50,7 @@ const fetchItems = async (UUID) => {
 
 const uploadManifest = async (event) => {
   /*
-    Select the file, create a new form data object, 
+    Sedialect the file, create a new form data object, 
     use the form data object to send the file to the server for processing
   */
 
@@ -184,6 +184,26 @@ const logOut = async () => {
   }
 };
 
+const createNewUser = async () => {
+  const fetchOptions = {
+    method: 'POST',
+    credentials: 'include',
+  };
+
+  try {
+    const response = await fetch('http://localhost:3000/users/create', fetchOptions);
+    const data = response.json();
+
+    if (!response.ok) {
+      return { success: false, status: response.status, message: data.message };
+    } else {
+      return { success: true, status: response.status, message: data.message };
+    }
+  } catch (error) {
+    throw new Error('Failed to connect to the server:', error.message);
+  }
+};
+
 const fetchCurrentSession = async () => {
   const fetchOptions = {
     method: 'GET',
@@ -216,5 +236,6 @@ export {
   deleteManifests,
   login,
   logOut,
+  createNewUser,
   fetchCurrentSession,
 };
