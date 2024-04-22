@@ -3,7 +3,7 @@ import DocumentTable from './components/AnalyticalTable';
 import DisplayShellBar from './components/ShellBar';
 import { fetchCurrentSession, fetchManifests, uploadManifest } from './networkRequests/fetchRequests';
 import { saveSessionToStorage } from './localStorage/localStorage';
-import { ErrorDialog, ItemsDialog } from './components/Dialogs';
+import { ErrorDialog, ItemsDialog, NewUserDialog } from './components/Dialogs';
 import FileUpload from './components/FileUpload';
 
 export default function App() {

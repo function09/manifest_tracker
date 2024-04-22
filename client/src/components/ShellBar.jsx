@@ -1,6 +1,6 @@
 import { Avatar, Menu, MenuItem, ShellBar } from '@ui5/webcomponents-react';
 import { useState } from 'react';
-import { LogOutDialog, LoginDialog } from './Dialogs';
+import { LogOutDialog, LoginDialog, NewUserDialog } from './Dialogs';
 import { logOut } from '../networkRequests/fetchRequests';
 import sapLogo from '../assets/SAP_2011_logo.svg';
 import { clearSessionFromStorage } from '../localStorage/localStorage';
@@ -16,6 +16,7 @@ export default function DisplayShellBar({
   const [menuIsOpen, setMenuIsOpen] = useState(false);
   const [dialogIsOpen, setDialogIsOpen] = useState(false);
   const [logOutDialogOpen, setLogoutDialogOpen] = useState(false);
+  const [newUserDialogOpen, setNewUserDialogOpen] = useState(false);
   const [logoutMessage, setLogOutMessage] = useState('');
   // const [loginSession, setLoginSession] = useState(null);
 
@@ -28,6 +29,7 @@ export default function DisplayShellBar({
   }
   // differentiate this from the error dialog
   function displayDialog() {
+    setNewUserDialogOpen(false);
     setDialogIsOpen(true);
   }
 
@@ -41,6 +43,11 @@ export default function DisplayShellBar({
 
   function closeLogoutDialog() {
     setLogoutDialogOpen(false);
+  }
+
+  function openCreateUserDialog() {
+    closeDialog();
+    setNewUserDialogOpen(true);
   }
 
   async function setLogOut() {
@@ -92,10 +99,17 @@ export default function DisplayShellBar({
         isOpen={dialogIsOpen}
         onClose={closeDialog}
         onLogin={setLoginSession}
+        openCreateUserDialog={openCreateUserDialog}
         setErrorMessage={setErrorMessage}
         errorMessage={errorMessage}
       />
       <LogOutDialog isOpen={logOutDialogOpen} logOutMessage={logoutMessage} handleClose={closeLogoutDialog} />
+      <NewUserDialog
+        isOpen={newUserDialogOpen}
+        openLoginDialog={displayDialog}
+        setErrorMessage={setErrorMessage}
+        errorMessage={errorMessage}
+      />
     </>
   );
 }

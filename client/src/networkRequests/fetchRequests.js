@@ -184,17 +184,22 @@ const logOut = async () => {
   }
 };
 
-const createNewUser = async () => {
+const createNewUser = async (username, password) => {
   const fetchOptions = {
     method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+    },
+    body: JSON.stringify({ username, password }),
     credentials: 'include',
   };
 
   try {
     const response = await fetch('http://localhost:3000/users/create', fetchOptions);
-    const data = response.json();
+    const data = await response.json();
 
     if (!response.ok) {
+      console.log(data.error);
       return { success: false, status: response.status, message: data.message };
     } else {
       return { success: true, status: response.status, message: data.message };

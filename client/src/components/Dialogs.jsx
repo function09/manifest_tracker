@@ -1,7 +1,7 @@
 import ItemsTable from './ItemsTable';
 import { Dialog, Button, Form, FormItem, Input, List, Text, StandardListItem } from '@ui5/webcomponents-react';
 import { useState } from 'react';
-import { login } from '../networkRequests/fetchRequests';
+import { createNewUser, login } from '../networkRequests/fetchRequests';
 import '@ui5/webcomponents/dist/features/InputElementsFormSupport.js';
 
 function ErrorDialog({ errorMessage, errorStatus, errorDialogOpen, setErrorDialogOpen }) {
@@ -44,7 +44,7 @@ function ItemsDialog({ isOpen, setIsOpen, itemData, header }) {
   );
 }
 
-function LoginDialog({ isOpen, onClose, onLogin, setErrorMessage, errorMessage }) {
+function LoginDialog({ isOpen, onClose, onLogin, openCreateUserDialog, setErrorMessage, errorMessage }) {
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
 
@@ -71,7 +71,15 @@ function LoginDialog({ isOpen, onClose, onLogin, setErrorMessage, errorMessage }
   return (
     <Dialog
       open={isOpen}
-      headerText="Login" /*Set a footer to include a sign-up feature THERE IS A BUG WHERE IF ESCAPE IS PRESSED THE DIALOG STATE DOES NOT CHANGE*/
+      headerText="Login" /*THERE IS A BUG WHERE IF ESCAPE IS PRESSED THE DIALOG STATE DOES NOT CHANGE*/
+      footer={
+        <Text>
+          New user?
+          <Button design="Transparent" onClick={openCreateUserDialog}>
+            Create an account!
+          </Button>
+        </Text>
+      }
     >
       {errorMessage && <Text style={{ color: 'red' }}>{errorMessage}</Text>}
       <Form onSubmit={handleLogin}>
@@ -106,4 +114,66 @@ function LogOutDialog({ isOpen, logOutMessage, handleClose }) {
     </Dialog>
   );
 }
-export { ErrorDialog, ItemsDialog, LoginDialog, LogOutDialog };
+
+function NewUserDialog({ isOpen, openLoginDialog, setErrorMessage, errorMessage }) {
+  const [username, setUsername] = useState('');
+  const [password, setPassword] = useState('');
+
+  async function handleCreateUser(event) {
+    event.preventDefault();
+    try {
+      const newUser = await createNewUser(username, password);
+
+      if (!newUser.success) {
+        setErrorMessage(newUser.message);
+      } else {
+        setErrorMessage('');
+        setUsername('');
+        setPassword('');
+        openLoginDialog();
+        return newUser;
+      }
+    } catch (error) {
+      console.log(error);
+    }
+  }
+
+  return (
+    <Dialog
+      open={isOpen}
+      headerText="Create a new user"
+      footer={
+        <Text>
+          Already have an account?{' '}
+          <Button design="Transparent" onClick={openLoginDialog}>
+            Login!
+          </Button>
+        </Text>
+      }
+    >
+      {errorMessage && <Text style={{ color: 'red' }}>{errorMessage}</Text>}
+      <Form onSubmit={handleCreateUser}>
+        <FormItem label="Username">
+          <Input
+            type="text"
+            value={username}
+            onChange={(event) => {
+              setUsername(event.currentTarget.value);
+            }}
+          ></Input>
+        </FormItem>
+        <FormItem label="Password">
+          <Input
+            type="Password"
+            value={password}
+            onChange={(event) => {
+              setPassword(event.currentTarget.value);
+            }}
+          ></Input>
+        </FormItem>
+        <Button type="Submit">Submit</Button>
+      </Form>
+    </Dialog>
+  );
+}
+export { ErrorDialog, ItemsDialog, LoginDialog, LogOutDialog, NewUserDialog };
