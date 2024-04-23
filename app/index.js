@@ -11,7 +11,7 @@ import "dotenv/config";
 const app = express();
 
 const corsOptions = {
-  origin: "https://manifest-tracker-client-5unk.vercel.app",
+  origin: "http://localhost:5173",
   credentials: true,
   optionsSuccessStatus: 200,
 };
