@@ -22,6 +22,7 @@ export default function DocumentTable({
   const [editValue, setEditValue] = useState('');
   const editValueRef = useRef('');
 
+  //MUST MEMOIZE DATA
   async function displayData() {
     try {
       const fetchData = await fetchManifests();
@@ -35,10 +36,6 @@ export default function DocumentTable({
       if (loginSession) {
         setManifestData(fetchData.data);
       }
-
-      // } catch (error) {
-      //   console.log(error);
-      // }
     } catch (error) {
       console.log(error);
     }
