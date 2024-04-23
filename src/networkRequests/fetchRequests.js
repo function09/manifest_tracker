@@ -220,14 +220,13 @@ const fetchCurrentSession = async () => {
 
   try {
     const response = await fetch('http://localhost:3000/users/session', fetchOptions);
+    const data = await response.json();
 
     if (!response.ok) {
-      return null;
+      return { success: false, status: response.status, message: data.message };
+    } else {
+      return { success: true, status: response.status, message: data.message };
     }
-
-    const sessionData = await response.json();
-
-    return sessionData;
   } catch (error) {
     throw new Error('Failed to connect to the server:', error.message);
   }

@@ -3,7 +3,7 @@ import DocumentTable from './components/AnalyticalTable';
 import DisplayShellBar from './components/ShellBar';
 import { fetchCurrentSession, fetchManifests, uploadManifest } from './networkRequests/fetchRequests';
 import { saveSessionToStorage } from './localStorage/localStorage';
-import { ErrorDialog, ItemsDialog, NewUserDialog } from './components/Dialogs';
+import { ErrorDialog, ItemsDialog } from './components/Dialogs';
 import FileUpload from './components/FileUpload';
 
 export default function App() {
@@ -49,16 +49,21 @@ export default function App() {
       try {
         const session = await fetchCurrentSession();
 
-        if (session) {
-          setLoginSession(session);
-          saveSessionToStorage(session);
-        } else {
+        if (!session.success) {
+          setErrorStatus(session.status);
+          setErrorMessage(session.message);
           setLoginSession(null);
           saveSessionToStorage(null);
+          openErrorDialog();
+        } else {
+          setLoginSession(session);
+          saveSessionToStorage(session);
         }
       } catch (error) {
+        setErrorMessage(error.message);
         setLoginSession(null);
         saveSessionToStorage(null);
+        openErrorDialog();
       }
     }
 
