@@ -10,13 +10,28 @@ import "dotenv/config";
 
 const app = express();
 
+const allowedOrigins = ["http://localhost:3000", "https://manifest-tracker-client.vercel.app"];
+
 const corsOptions = {
-  origin: "https://manifest-tracker-client.vercel.app",
-  credentials: true,
+  origin: function (origin, callback) {
+    if (!origin || allowedOrigins.includes(origin)) {
+      callback(null, true);
+    } else {
+      callback(new Error("Not allowed by CORS"));
+    }
+  },
+  // credentials: true,
   optionsSuccessStatus: 200,
 };
 // CORS issues happening
+// CORS issues happening
 app.use(cors(corsOptions));
+app.options("/api/v1/manifests", cors());
+app.use(
+  cookieParser(process.env.SECRET, {
+    sameSite: "lax",
+  })
+);
 app.options("/api/v1/manifests", cors());
 app.use(
   cookieParser(process.env.SECRET, {
@@ -32,7 +47,6 @@ app.use(
       maxAge: 60000 * 60,
       httpOnly: true,
       sameSite: "lax",
-      domain: "https://manifest-tracker-api-production.up.railway.app/",
     },
   })
 );
