@@ -43,6 +43,7 @@ const verifyFileSignature = (req) => {
 
 const uploadDocumentController = async (req, res) => {
   if (verifyFileInput(req)) {
+    // Is this needed? manifests automatically attempt uploading when selecting a file
     return res.status(400).json({ message: "no file has been selected" });
   }
 

@@ -62,7 +62,8 @@ const updateManifest = async (param, materialDocNumber) => {
 
 const deleteManifest = async (param) => {
   try {
-    return await Manifest.findOneAndDelete({ UUID: param }).exec();
+    const deletedDocument = await Manifest.findOneAndDelete({ UUID: param }).exec();
+    return deletedDocument;
   } catch (error) {
     return error;
   }

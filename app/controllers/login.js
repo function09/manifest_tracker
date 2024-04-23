@@ -23,8 +23,7 @@ const loginController = async (req, res) => {
     }
 
     req.session.userId = user.UUID;
-
-    return res.status(200).json({ message: `User ${username} successfully logged in` });
+    return res.status(200).json({ message: "Successfully logged in", username });
   } catch (error) {
     return res.status(500).json({ error });
   }

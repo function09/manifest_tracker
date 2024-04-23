@@ -27,7 +27,6 @@ const userExists = async (username) => {
 const createUser = async (username, password) => {
   try {
     const hashedPassword = await bcrypt.hash(password, 10);
-
     return new User({ username, password: hashedPassword, UUID: uuidv4() }).save();
   } catch (error) {
     return error;

@@ -78,6 +78,7 @@ const extractQuantity = async (buffer) => {
 
 const createItems = async (buffer) => {
   try {
+    // try Promise.all
     const items = await extractMaterialAndBatchID(buffer);
     const itemDescription = await extractProductDescription(buffer);
     const itemQuantity = await extractQuantity(buffer);
