@@ -2,7 +2,7 @@
 //Also try to break these down and prevent repetition
 //Clean these up as well so they're consistent
 
-const baseURL = 'https://manifest-tracker-api.vercel.app/';
+const baseURL = 'https://manifest-tracker-api-production.up.railway.app';
 
 const urls = {
   manifests: `${baseURL}/api/v1/manifests`,
