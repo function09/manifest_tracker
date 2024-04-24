@@ -4,7 +4,6 @@ import { getAllDocumentsController, getSingleDocumentController } from "../contr
 import uploadDocumentController from "../controllers/uploadManifest.js";
 import updateDocumentController from "../controllers/updateManifest.js";
 import deleteDocumentController from "../controllers/deleteManifest.js";
-import authenticateUser from "../middleware/authUser.js";
 
 const router = Router();
 
