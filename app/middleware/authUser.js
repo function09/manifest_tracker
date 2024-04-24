@@ -2,7 +2,7 @@ import "dotenv/config";
 
 const authenticateUser = (req, res, next) => {
   console.log(req.session);
-  console.log(req.id);
+  console.log(req.userId);
   if (req.session && req.session.userId) {
     next();
   } else {
