@@ -20,7 +20,7 @@ app.use(cors(corsOptions));
 app.options("/api/v1/manifests", cors());
 app.use(
   cookieParser(process.env.SECRET, {
-    sameSite: "lax",
+    sameSite: "none",
   })
 );
 app.use(
@@ -31,7 +31,7 @@ app.use(
     cookie: {
       maxAge: 60000 * 60,
       httpOnly: true,
-      sameSite: "lax",
+      sameSite: "none",
       domain: "manifest-tracker-api-production.up.railway.app",
     },
   })
