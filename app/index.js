@@ -17,7 +17,7 @@ const corsOptions = {
 };
 // CORS issues happening
 app.use(cors(corsOptions));
-app.options("/api/v1/manifests", cors());
+app.options("/api/v1/manifests", cors(corsOptions));
 app.use(
   cookieParser(process.env.SECRET, {
     sameSite: "lax",
