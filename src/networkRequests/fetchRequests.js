@@ -163,7 +163,7 @@ const login = async (username, password) => {
   try {
     const response = await fetch(urls.login, fetchOptions);
     const result = await response.json();
-
+    console.log(result);
     if (!response.ok) {
       return { success: false, status: response.status, message: result.message };
     } else {
@@ -187,7 +187,7 @@ const logOut = async () => {
   try {
     const response = await fetch(urls.logout, fetchOptions);
     const result = await response.json();
-
+    console.log(result);
     if (!response.ok) {
       return { success: false, status: response.status, message: result.message };
     } else {
@@ -235,7 +235,7 @@ const fetchCurrentSession = async () => {
   try {
     const response = await fetch(urls.session, fetchOptions);
     const data = await response.json();
-
+    console.log(data);
     if (!response.ok) {
       return { success: false, status: response.status, message: data.message };
     } else {
