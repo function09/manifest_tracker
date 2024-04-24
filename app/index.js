@@ -17,6 +17,7 @@ const corsOptions = {
 };
 
 app.use(cors(corsOptions));
+app.options("/api/v1/manifests", cors());
 app.use(cookieParser());
 app.use(
   session({
