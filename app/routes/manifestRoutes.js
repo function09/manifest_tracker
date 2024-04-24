@@ -11,14 +11,14 @@ const router = Router();
 const storage = multer.memoryStorage();
 const upload = multer({ storage });
 
-router.get("/", authenticateUser, getAllDocumentsController);
+router.get("/", /*authenticateUser*,*/ getAllDocumentsController);
 
-router.get("/:id", authenticateUser, getSingleDocumentController);
+router.get("/:id", /*authenticateUser*,*/ getSingleDocumentController);
 
-router.post("/upload", authenticateUser, upload.single("file"), uploadDocumentController);
+router.post("/upload", /*authenticateUser*,*/ upload.single("file"), uploadDocumentController);
 
-router.put("/update/:id", authenticateUser, updateDocumentController);
+router.put("/update/:id", /*authenticateUser*,*/ updateDocumentController);
 
-router.delete("/delete/:id", authenticateUser, deleteDocumentController);
+router.delete("/delete/:id", /*authenticateUser*,*/ deleteDocumentController);
 
 export default router;
