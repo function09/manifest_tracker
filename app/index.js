@@ -18,7 +18,12 @@ const corsOptions = {
 
 app.use(cors(corsOptions));
 app.options("/api/v1/manifests", cors());
-app.use(cookieParser());
+app.use(
+  cookieParser(process.env.SECRET, {
+    sameSite: "none",
+    secure: true,
+  })
+);
 app.use(
   session({
     secret: process.env.SECRET,
@@ -27,7 +32,8 @@ app.use(
     cookie: {
       maxAge: 60000 * 60,
       httpOnly: true,
-      sameSite: "lax",
+      sameSite: "none",
+      secure: true,
     },
   })
 );
