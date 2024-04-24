@@ -1,6 +1,21 @@
 // Add a loading modal to display as requests are being sent and processed by server
 //Also try to break these down and prevent repetition
 //Clean these up as well so they're consistent
+
+const baseURL = 'http://localhost:3000';
+
+const urls = {
+  manifests: `${baseURL}/api/v1/manifests`,
+  items: (UUID) => `${baseURL}/api/v1/manifests/${UUID}`,
+  uploadManifest: `${baseURL}/api/v1/manifests/upload`,
+  updateManifest: (UUID) => `${baseURL}/api/v1/manifests/update/${UUID}`,
+  deleteManifest: (UUID) => `${baseURL}/api/v1/manifests/delete/${UUID}`,
+  login: `${baseURL}/users/login`,
+  logout: `${baseURL}/users/logout`,
+  createUser: `${baseURL}/users/create`,
+  session: `${baseURL}/users/session`,
+};
+
 const fetchManifests = async () => {
   const fetchOptions = {
     method: 'GET',
@@ -11,7 +26,7 @@ const fetchManifests = async () => {
   };
 
   try {
-    const response = await fetch('http://localhost:3000/api/v1/manifests', fetchOptions);
+    const response = await fetch(urls.manifests, fetchOptions);
     const result = await response.json();
 
     if (!response.ok) {
@@ -34,7 +49,7 @@ const fetchItems = async (UUID) => {
   };
   // clean all of this up
   try {
-    const response = await fetch(`http://localhost:3000/api/v1/manifests/${UUID}`, fetchOptions);
+    const response = await fetch(`${urls.manifests}/${UUID}`, fetchOptions);
     const result = await response.json();
 
     if (!response.ok) {
@@ -72,7 +87,7 @@ const uploadManifest = async (event) => {
   };
 
   try {
-    const response = await fetch('http://localhost:3000/api/v1/manifests/upload', fetchOptions);
+    const response = await fetch(urls.uploadManifest, fetchOptions);
     const data = await response.json();
 
     if (!response.ok) {
@@ -98,9 +113,8 @@ const editMaterialDocument = async (UUID, materialDocNumber) => {
     credentials: 'include',
   };
   try {
-    const response = await fetch(`http://localhost:3000/api/v1/manifests/update/${UUID}`, fetchOptions);
+    const response = await fetch(urls.updateManifest(UUID), fetchOptions);
     const result = await response.json();
-    console.log(result.message);
     if (!response.ok) {
       const errorMessages = Array.isArray(result.message)
         ? result.message.map((message) => message.msg)
@@ -123,7 +137,7 @@ const deleteManifests = async (UUID) => {
   };
 
   try {
-    const response = await fetch(`http://localhost:3000/api/v1/manifests/delete/${UUID}`, fetchOptions);
+    const response = await fetch(urls.deleteManifest(UUID), fetchOptions);
     const data = await response.json();
 
     if (!response.ok) {
@@ -147,7 +161,7 @@ const login = async (username, password) => {
   };
 
   try {
-    const response = await fetch(`http://localhost:3000/users/login`, fetchOptions);
+    const response = await fetch(urls.login, fetchOptions);
     const result = await response.json();
 
     if (!response.ok) {
@@ -171,7 +185,7 @@ const logOut = async () => {
   };
 
   try {
-    const response = await fetch('http://localhost:3000/users/logout', fetchOptions);
+    const response = await fetch(urls.logout, fetchOptions);
     const result = await response.json();
 
     if (!response.ok) {
@@ -195,7 +209,7 @@ const createNewUser = async (username, password) => {
   };
 
   try {
-    const response = await fetch('http://localhost:3000/users/create', fetchOptions);
+    const response = await fetch(urls.createUser, fetchOptions);
     const data = await response.json();
 
     if (!response.ok) {
@@ -219,7 +233,7 @@ const fetchCurrentSession = async () => {
   };
 
   try {
-    const response = await fetch('http://localhost:3000/users/session', fetchOptions);
+    const response = await fetch(urls.session, fetchOptions);
     const data = await response.json();
 
     if (!response.ok) {

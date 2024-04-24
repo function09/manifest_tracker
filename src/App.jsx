@@ -2,7 +2,7 @@ import { useEffect, useState } from 'react';
 import DocumentTable from './components/AnalyticalTable';
 import DisplayShellBar from './components/ShellBar';
 import { fetchCurrentSession, fetchManifests, uploadManifest } from './networkRequests/fetchRequests';
-import { saveSessionToStorage } from './localStorage/localStorage';
+import { getLoginSessionFromStorage, saveSessionToStorage } from './localStorage/localStorage';
 import { ErrorDialog, ItemsDialog } from './components/Dialogs';
 import FileUpload from './components/FileUpload';
 
@@ -47,17 +47,19 @@ export default function App() {
   useEffect(() => {
     async function getCurrentSession() {
       try {
-        const session = await fetchCurrentSession();
-
-        if (!session.success) {
-          setErrorStatus(session.status);
-          setErrorMessage(session.message);
-          setLoginSession(null);
-          saveSessionToStorage(null);
-          openErrorDialog();
+        const storedSession = getLoginSessionFromStorage();
+        if (storedSession) {
+          setLoginSession(storedSession);
         } else {
-          setLoginSession(session);
-          saveSessionToStorage(session);
+          const session = await fetchCurrentSession();
+          if (!session.success) {
+            setLoginSession(null);
+            saveSessionToStorage(null);
+            openErrorDialog();
+          } else {
+            setLoginSession(session);
+            saveSessionToStorage(session);
+          }
         }
       } catch (error) {
         setErrorMessage(error.message);

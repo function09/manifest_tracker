@@ -3,6 +3,7 @@ import { Dialog, Button, Form, FormItem, Input, List, Text, StandardListItem } f
 import { useState } from 'react';
 import { createNewUser, login } from '../networkRequests/fetchRequests';
 import '@ui5/webcomponents/dist/features/InputElementsFormSupport.js';
+import { saveSessionToStorage } from '../localStorage/localStorage';
 
 function ErrorDialog({ errorMessage, errorStatus, errorDialogOpen, setErrorDialogOpen }) {
   function closeErrorDialog() {
@@ -57,7 +58,7 @@ function LoginDialog({ isOpen, onClose, onLogin, openCreateUserDialog, setErrorM
       if (!data.success) {
         setErrorMessage(data.message);
       } else {
-        setErrorMessage('');
+        saveSessionToStorage(data.message);
         onClose();
         onLogin(data.message);
         setUsername('');
