@@ -32,7 +32,7 @@ app.use(
       maxAge: 60000 * 60,
       httpOnly: true,
       sameSite: "strict",
-      domain: "https://manifest-tracker-api-production.up.railway.app",
+      domain: "manifest-tracker-api-production.up.railway.app",
     },
   })
 );
