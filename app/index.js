@@ -32,6 +32,7 @@ app.use(
       maxAge: 60000 * 60,
       httpOnly: true,
       sameSite: "lax",
+      domain: "https://manifest-tracker-api-production.up.railway.app/",
     },
   })
 );
