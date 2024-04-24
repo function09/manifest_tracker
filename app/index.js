@@ -15,7 +15,7 @@ const corsOptions = {
   credentials: true,
   optionsSuccessStatus: 200,
 };
-//CORS issues happening
+// CORS issues happening
 app.use(cors(corsOptions));
 app.options("/api/v1/manifests", cors());
 app.use(
@@ -32,6 +32,7 @@ app.use(
       maxAge: 60000 * 60,
       httpOnly: true,
       sameSite: "strict",
+      domain: "https://manifest-tracker-api-production.up.railway.app",
     },
   })
 );
