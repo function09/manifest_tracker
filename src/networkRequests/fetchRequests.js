@@ -22,7 +22,7 @@ const fetchManifests = async () => {
     headers: {
       'Content-Type': 'application/json',
     },
-    // credentials: 'include',
+    credentials: 'include',
   };
 
   try {
@@ -45,7 +45,7 @@ const fetchItems = async (UUID) => {
     headers: {
       'Content-Type': 'application/json',
     },
-    // credentials: 'include',
+    credentials: 'include',
   };
   // clean all of this up
   try {
@@ -82,7 +82,7 @@ const uploadManifest = async (event) => {
 
   const fetchOptions = {
     method: 'POST',
-    // credentials: 'include',
+    credentials: 'include',
     body: formData,
   };
 
@@ -110,7 +110,7 @@ const editMaterialDocument = async (UUID, materialDocNumber) => {
       'Content-Type': 'application/json',
     },
     body: JSON.stringify({ materialDocNumber }),
-    // credentials: 'include',
+    credentials: 'include',
   };
   try {
     const response = await fetch(urls.updateManifest(UUID), fetchOptions);
@@ -133,7 +133,7 @@ const deleteManifests = async (UUID) => {
     headers: {
       'Content-Type': 'application/json',
     },
-    // credentials: 'include',
+    credentials: 'include',
   };
 
   try {
@@ -157,7 +157,7 @@ const login = async (username, password) => {
       'Content-Type': 'application/json',
     },
     body: JSON.stringify({ username, password }),
-    // credentials: 'include',
+    credentials: 'include',
   };
 
   try {
@@ -181,7 +181,7 @@ const logOut = async () => {
     headers: {
       'Content-Type': 'application/json',
     },
-    // credentials: 'include',
+    credentials: 'include',
   };
 
   try {
@@ -205,7 +205,7 @@ const createNewUser = async (username, password) => {
       'Content-Type': 'application/json',
     },
     body: JSON.stringify({ username, password }),
-    // credentials: 'include',
+    credentials: 'include',
   };
 
   try {
@@ -229,7 +229,7 @@ const fetchCurrentSession = async () => {
     headers: {
       'Content-Type': 'application/json',
     },
-    // credentials: 'include',
+    credentials: 'include',
   };
 
   try {
