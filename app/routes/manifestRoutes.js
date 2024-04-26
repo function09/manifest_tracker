@@ -10,7 +10,7 @@ const router = Router();
 const storage = multer.memoryStorage();
 const upload = multer({ storage });
 
-router.get("/", /*authenticateUser*,*/ getAllDocumentsController);
+router.get("/", /*authenticateUser*/ getAllDocumentsController);
 
 router.get("/:id", /*authenticateUser*,*/ getSingleDocumentController);
 

@@ -4,6 +4,7 @@ import loginController from "../controllers/login.js";
 import logoutController from "../controllers/logout.js";
 import verifyLogin from "../controllers/verifyLogin.js";
 import verifySession from "../controllers/verifySession.js";
+import passport from "passport";
 
 const router = Router();
 
