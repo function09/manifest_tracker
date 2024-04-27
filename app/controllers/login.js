@@ -20,7 +20,7 @@ const loginController = async (req, res, next) => {
       if (error) {
         return next(err);
       }
-      return res.status(200).json({ message: "User successfully logged in!", user: user.UUID });
+      return res.status(200).json({ message: "User successfully logged in!", user: user.id });
     });
   })(req, res, next);
   //   let { username, password } = req.body;

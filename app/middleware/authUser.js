@@ -1,11 +1,13 @@
 import "dotenv/config";
 
 const authenticateUser = (req, res, next) => {
-  if (req.session && req.session.userId) {
-    next();
-  } else {
-    res.status(403).json({ message: "No authorization" });
+  console.log("\n require auth");
+
+  if (!req.isAuthenticated()) {
+    return res.status(403).json({ messaged: "Unauthorized" });
   }
+
+  next();
 };
 
 export default authenticateUser;
