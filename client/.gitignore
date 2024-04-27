@@ -1,6 +1,4 @@
-node_modules
-.env
-/populateDB.# Logs
+# Logs
 logs
 *.log
 npm-debug.log*
