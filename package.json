@@ -1,33 +1,39 @@
 {
-  "name": "client",
-  "private": true,
-  "version": "0.0.0",
+  "name": "app",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
   "type": "module",
   "scripts": {
-    "dev": "vite",
-    "build": "vite build",
-    "lint": "eslint . --ext js,jsx --report-unused-disable-directives --max-warnings 0",
-    "preview": "vite preview"
+    "start": "node server.js",
+    "refresh": "nodemon server.js"
   },
+  "author": "",
+  "license": "ISC",
   "dependencies": {
-    "@ui5/webcomponents": "^1.23.1",
-    "@ui5/webcomponents-fiori": "^1.23.1",
-    "@ui5/webcomponents-icons": "^1.23.1",
-    "@ui5/webcomponents-react": "^1.26.0",
-    "dotenv": "^16.4.5",
-    "react": "^18.2.0",
-    "react-dom": "^18.2.0"
+    "bcryptjs": "^2.4.3",
+    "cookie-parser": "^1.4.6",
+    "cookie-session": "^2.1.0",
+    "cors": "^2.8.5",
+    "dotenv": "^16.3.1",
+    "express": "^4.18.2",
+    "express-session": "^1.18.0",
+    "express-validator": "^7.0.1",
+    "mime": "^4.0.1",
+    "mongoose": "^8.1.1",
+    "morgan": "^1.10.0",
+    "multer": "^1.4.5-lts.1",
+    "passport": "0.5.0",
+    "passport-local": "^1.0.0",
+    "pdf-parse-fork": "^1.2.0",
+    "uuid": "^9.0.1"
   },
   "devDependencies": {
     "@flydotio/dockerfile": "^0.5.6",
-    "@types/react": "^18.2.64",
-    "@types/react-dom": "^18.2.21",
-    "@vitejs/plugin-react": "^4.2.1",
-    "eslint": "^8.57.0",
-    "eslint-plugin-react": "^7.34.0",
-    "eslint-plugin-react-hooks": "^4.6.0",
-    "eslint-plugin-react-refresh": "^0.4.5",
-    "prettier": "^3.2.5",
-    "vite": "^5.1.6"
+    "eslint": "^8.56.0",
+    "eslint-config-airbnb-base": "^15.0.0",
+    "eslint-config-prettier": "^9.1.0",
+    "eslint-plugin-import": "^2.29.1",
+    "nodemon": "^3.0.3"
   }
 }

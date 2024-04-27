@@ -3,13 +3,13 @@
 # See https://fly.io/docs/reference/configuration/ for information about how to use this file.
 #
 
-app = 'manifest-tracker-client-falling-wind-9457'
+app = 'manifest-tracker-api-young-sound-5223'
 primary_region = 'atl'
 
 [build]
 
 [http_service]
-  internal_port = 80
+  internal_port = 3000
   force_https = true
   auto_stop_machines = true
   auto_start_machines = true
