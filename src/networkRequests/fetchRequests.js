@@ -2,7 +2,7 @@
 //Also try to break these down and prevent repetition
 //Clean these up as well so they're consistent
 
-const baseURL = 'https://manifest-tracker-api-withered-shape-6734.fly.dev';
+const baseURL = /*'https://manifest-tracker-api-withered-shape-6734.fly.dev'*/ 'http://localhost:3000';
 
 const urls = {
   manifests: `${baseURL}/api/v1/manifests`,
@@ -82,7 +82,7 @@ const uploadManifest = async (event) => {
 
   const fetchOptions = {
     method: 'POST',
-    // credentials: 'include',
+    credentials: 'include',
     body: formData,
   };
 
@@ -163,12 +163,12 @@ const login = async (username, password) => {
   try {
     const response = await fetch(urls.login, fetchOptions);
     const result = await response.json();
-    console.log(result);
+
     if (!response.ok) {
       return { success: false, status: response.status, message: result.message };
     } else {
       //Need to fix endpoint structure
-      return { success: true, status: response.status, message: result.username };
+      return { success: true, status: response.status, message: result };
     }
   } catch (error) {
     throw new Error('Failed to connect to the server:', error.message);
@@ -187,7 +187,6 @@ const logOut = async () => {
   try {
     const response = await fetch(urls.logout, fetchOptions);
     const result = await response.json();
-    console.log(result);
     if (!response.ok) {
       return { success: false, status: response.status, message: result.message };
     } else {
@@ -213,7 +212,6 @@ const createNewUser = async (username, password) => {
     const data = await response.json();
 
     if (!response.ok) {
-      console.log(data.error);
       return { success: false, status: response.status, message: data.message };
     } else {
       return { success: true, status: response.status, message: data.message };
@@ -235,7 +233,6 @@ const fetchCurrentSession = async () => {
   try {
     const response = await fetch(urls.session, fetchOptions);
     const data = await response.json();
-    console.log(data);
     if (!response.ok) {
       return { success: false, status: response.status, message: data.message };
     } else {

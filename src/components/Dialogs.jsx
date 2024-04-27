@@ -54,11 +54,12 @@ function LoginDialog({ isOpen, onClose, onLogin, openCreateUserDialog, setErrorM
     // Reset state when a user logs in for username, password
     try {
       const data = await login(username, password);
+      const userId = await data.message.user.id;
 
       if (!data.success) {
         setErrorMessage(data.message);
       } else {
-        saveSessionToStorage(data.message);
+        saveSessionToStorage(userId);
         onClose();
         onLogin(data.message);
         setUsername('');

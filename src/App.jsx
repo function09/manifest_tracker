@@ -55,7 +55,8 @@ export default function App() {
           if (!session.success) {
             setLoginSession(null);
             saveSessionToStorage(null);
-            openErrorDialog();
+
+            //openErrorDialog(); //This modal displays after logging in
           } else {
             setLoginSession(session);
             saveSessionToStorage(session);
