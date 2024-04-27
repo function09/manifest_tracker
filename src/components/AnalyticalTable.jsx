@@ -138,7 +138,7 @@ export default function DocumentTable({
 
   return (
     <>
-      <AnalyticalTable columns={tableColumns} />
+      <AnalyticalTable columns={tableColumns} data={manifestData} />
     </>
   );
 }

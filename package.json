@@ -14,6 +14,7 @@
     "@ui5/webcomponents-fiori": "^1.23.1",
     "@ui5/webcomponents-icons": "^1.23.1",
     "@ui5/webcomponents-react": "^1.26.0",
+    "dotenv": "^16.4.5",
     "react": "^18.2.0",
     "react-dom": "^18.2.0"
   },
