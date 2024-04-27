@@ -12,22 +12,33 @@ import LocalStrategy from "./middleware/localAuth.js";
 
 const app = express();
 
-const allowedOrigins = ["http://localhost:3000", "https://manifest-tracker-client.vercel.app"];
+// const allowedOrigins = ["https://manifest-tracker-client.fly.dev/", "http://localhost:5173"];
 
-const corsOptions = {
-  origin(origin, callback) {
-    if (!origin || allowedOrigins.includes(origin)) {
-      callback(null, true);
-    } else {
-      callback(new Error("Not allowed by CORS"));
-    }
-  },
-  // credentials: true,
-  optionsSuccessStatus: 200,
-};
-// CORS issues happening
-app.use(cors(corsOptions));
-app.options("/api/v1/manifests", cors());
+// const corsOptions = {
+//   // origin: function (origin, callback) {
+//   //   if (!origin || allowedOrigins.includes(origin)) {
+//   //     callback(null, true);
+//   //   } else {
+//   //     callback(new Error("Not allowed by CORS"));
+//   //   }
+//   // },
+//   origin: "*",
+//   methods: "GET,HEAD,PUT,PATCH,POST,DELETE",
+//   preflightContinue: false,
+//   credentials: true,
+//   optionsSuccessStatus: 200,
+// };
+// // CORS issues happening
+// app.use(cors(corsOptions));
+// app.options("*", cors(corsOptions));
+
+app.use((req, res, next) => {
+  res.setHeader("Access-Control-Allow-Origin", "https://manifest-tracker-client-falling-wind-9457.fly.dev");
+  res.setHeader("Access-Control-Allow-Methods", "GET, POST, OPTIONS, PUT, PATCH, DELETE");
+  res.setHeader("Access-Control-Allow-Headers", "Content-Type, Authorization");
+  res.setHeader("Access-Control-Allow-Credentials", "true");
+  next();
+});
 
 app.use(
   cookieSession({

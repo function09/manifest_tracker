@@ -1,9 +1,9 @@
-# fly.toml app configuration file generated for manifest-tracker-api-withered-shape-6734 on 2024-04-24T18:51:07-04:00
+# fly.toml app configuration file generated for manifest-tracker-api-young-sound-5223 on 2024-04-27T16:00:28-04:00
 #
 # See https://fly.io/docs/reference/configuration/ for information about how to use this file.
 #
 
-app = 'manifest-tracker-api-withered-shape-6734'
+app = 'manifest-tracker-api-young-sound-5223'
 primary_region = 'atl'
 
 [build]
